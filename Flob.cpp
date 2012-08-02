@@ -25,7 +25,7 @@ void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
 	colormode = GREEN;
 	
 	for(int i=0; i<5;i++) trackfeatures[i] = true;
-	videoimg.allocate(videoresw, videoresh, OF_IMAGE_COLOR);
+	videoimgsmall.allocate(videoresw, videoresh, OF_IMAGE_COLOR);
 	videoimggray.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
 	
 	videotexbin.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
@@ -42,30 +42,37 @@ void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
 
 
 
-ofImage & ofxFlob::binarize (unsigned char * pix){
+ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
+//no need
+//	videoimg.setFromPixels(pix, videoresw, videoresh, OF_IMAGE_COLOR);
+//	videoimg.update();
 
-	
-	
-	videoimg.setFromPixels(pix, videoresw, videoresh, OF_IMAGE_COLOR);
-	videoimg.update();
-	
-	
-	unsigned char * videoimgpix = videoimg.getPixels();
+//	unsigned char * videoimgpix = videoimg.getPixels();
 	unsigned char * videoimggraypix = videoimggray.getPixels();
 	unsigned char * backgroundpix = backgroundPixels.getPixels();
 	unsigned char * videotexbinpix = videotexbin.getPixels();
 
 	
-	
+	if(width!=videoresw||height!=videoresh){
+		ofImage src;
+		src.setFromPixels(pix, width, height, OF_IMAGE_COLOR);
+		src.resize(videoresw, videoresh);
+		unsigned char * srcpix = src.getPixels();
+		
+		for(int i=0; i<numPixels;i++){
+			videoimggraypix[i] = srcpix[i*3+1]; //g	
+		}
+		
+	} else {
 	
 	/// get its graycomponent working
 	for(int i=0; i<numPixels;i++){
-		videoimggraypix[i] = videoimgpix[i*3+1]; //g	
+//		videoimggraypix[i] = videoimgpix[i*3+1]; //g	
+		videoimggraypix[i] = pix[i*3+1]; //g	
 	}
-	videoimggray.update();
+	}
 	
-	
-
+videoimggray.update();
 	// 
 	int currentVal = 0, backgroundVal = 0, diffVal = 0;
 	// float currentValf = 0, backgroundValf = 0, diffValf = 0;
@@ -132,7 +139,6 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 		
 	
 	if (om == STATIC_DIFFERENCE) {
-//		cout << "stt"<<endl;
 		
 		for (int i = 0; i < numPixels; i++) {
 //			int currColor = videoimgpix[i*3+1];
@@ -143,11 +149,9 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 			diffVal = ABS(currColor - bkgdColor);
 //			diffValf = ABS(currentPixelsF[i] - backgroundPixelsF[i]);
 			
-//			differencePixelsF[i] = diffValf;
 			
 			int binarize = 0;
-			// if (diffVal > videothresh) {
-			if (diffVal > videothresh) {
+			if (diffVal >= videothresh) {
 				presence += 1;
 				binarize = 255;
 			}
@@ -180,7 +184,7 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 //			differencePixelsF[i] = diffValf;
 			
 			int binarize = 0;
-			if (diffVal > videothresh) {
+			if (diffVal >= videothresh) {
 				presence += 1;
 				binarize = 255;
 			}
@@ -200,10 +204,7 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 		
 		for (int i = 0; i < numPixels; i++) {
 			
-//			int currColor = videoimgpix[i*3+1];
-//			int bkgdColor = backgroundpix[i];
-
-			float valf = videotexmotionpix[i] ;//ABS(currColor - bkgdColor);//videotexbinpix[i]; //differencePixelsF[i];
+			float valf = videotexmotionpix[i];//ABS(currColor - bkgdColor);//videotexbinpix[i]; //differencePixelsF[i];
 			// int value = (videotexmotion.pixels[i] >> 8) & 0xff;
 			valf -= videofade; // minus fade
 			valf += videotexbinpix[i]; // (videotexbinpix[i] >> 8) & 0xff; // + binary

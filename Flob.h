@@ -21,7 +21,7 @@ class ofxFlob {
 public:
 	ImageBlobs					imageblobs;
 //	ofxCvColorImage				videoimg;
-	ofImage				videoimg;
+	ofImage				videoimgsmall;
 	ofImage				videoimggray;
 	ofImage						*videotex;
 //	ofxCvGrayscaleImage			videotexmotion;
@@ -75,7 +75,7 @@ public:
 	
 	
 	/// main funcs
-	ofImage & binarize (unsigned char * pix);
+	ofImage & binarize (unsigned char * pix, int width, int height);
 	void setBackground (ofImage& img);
 	void easeBackground (ofImage& img);
 	vector<ABlob*>*  calc( ofImage & bin ); 

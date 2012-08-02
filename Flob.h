@@ -22,7 +22,8 @@ public:
 	ImageBlobs					imageblobs;
 //	ofxCvColorImage				videoimg;
 	ofImage				videoimg;
-	ofImage						videotex;
+	ofImage				videoimggray;
+	ofImage						*videotex;
 //	ofxCvGrayscaleImage			videotexmotion;
 //	ofxCvGrayscaleImage			videotexbin;
 //	ofxCvColorImage				videoteximgmotion;	

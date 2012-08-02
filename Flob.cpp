@@ -26,10 +26,13 @@ void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
 	
 	for(int i=0; i<5;i++) trackfeatures[i] = true;
 	videoimg.allocate(videoresw, videoresh, OF_IMAGE_COLOR);
+	videoimggray.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
+	
 	videotexbin.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
 	videotexmotion.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
 	videoteximgmotion.allocate(videoresw, videoresh, OF_IMAGE_COLOR);
-	videotex.allocate(videoresw, videoresh, OF_IMAGE_COLOR_ALPHA);
+//	videotex.allocate(videoresw, videoresh, OF_IMAGE_COLOR_ALPHA);
+	videotex = &videoimggray;
 	numPixels = videoresw * videoresh * 1;
 	backgroundPixels.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
 	
@@ -41,89 +44,103 @@ void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
 
 ofImage & ofxFlob::binarize (unsigned char * pix){
 
+	
+	
 	videoimg.setFromPixels(pix, videoresw, videoresh, OF_IMAGE_COLOR);
 	videoimg.update();
-
-	// skiping mirror
 	
+	
+	unsigned char * videoimgpix = videoimg.getPixels();
+	unsigned char * videoimggraypix = videoimggray.getPixels();
+	unsigned char * backgroundpix = backgroundPixels.getPixels();
+	unsigned char * videotexbinpix = videotexbin.getPixels();
+
+	
+	
+	
+	/// get its graycomponent working
+	for(int i=0; i<numPixels;i++){
+		videoimggraypix[i] = videoimgpix[i*3+1]; //g	
+	}
+	videoimggray.update();
+	
+	
+
+	// 
 	int currentVal = 0, backgroundVal = 0, diffVal = 0;
 	// float currentValf = 0, backgroundValf = 0, diffValf = 0;
 	float diffValf = 0;
 	
-	float fease = 0.17f;
-	
+	float fease = 0.17f;	
 	
 	presence = 0;
 	
-	unsigned char * videoimgpix = videoimg.getPixels();
-	unsigned char * backgroundpix = backgroundPixels.getPixels();
-	unsigned char * videotexbinpix = videotexbin.getPixels();
+	
+	
+	// implementing mirror
+	
+	if (mirrorX && mirrorY) {
+		int* image = new int[numPixels]; // one image to flipx&y
+		for (int i = 0; i < numPixels; i++) {
+			image[i] = videoimggraypix[i];
+		}
+		
+		for (int j = 0; j < videoresh; j++) {
+			for (int i = 0; i < videoresw; i++) {
+				videoimggraypix[j * videoresw + i ] = image[(videoresw - i - 1)
+															 + (videoresh - j - 1) * videoresw ];
+			}
+		}
+		videoimggray.update();
+		delete[] image;
+		
+	} else if (mirrorX && !mirrorY) {
+		
+		int* scanline = new int[videoresw]; // one hscanline
+		for (int j = 0; j < videoresh; j++) {
+			for (int i = 0; i < videoresw; i++) {
+				scanline[(videoresw - i - 1)] = videoimggraypix[j * videoresw + i];
+				videoimggraypix[j * videoresw + i] = scanline[i];
+			}
+		}
+		
+		videoimggray.update();
+		delete[] scanline;
+		
+	} else if (!mirrorX && mirrorY) {
+		// working ok since 001j
+		int* scanline = new int[videoresh]; // one vscanline
+		
+		for (int i = 0; i < videoresw; i++) {
+			for (int j = 0; j < videoresh; j++) {
+				scanline[(videoresh - j - 1)] = videoimggraypix[j * videoresw + i];
+				videoimggraypix[j * videoresw + i] = scanline[j];
+			}
+		}
+		
+		videoimggray.update();
+		delete[] scanline;
+	}
+	
+	
+	
+	
+	
+	
+	// core binarize
+	
 		
 	
 	if (om == STATIC_DIFFERENCE) {
 //		cout << "stt"<<endl;
 		
 		for (int i = 0; i < numPixels; i++) {
-			int currColor = videoimgpix[i*3+1];
+//			int currColor = videoimgpix[i*3+1];
+			int currColor = videoimggraypix[i];
 			int bkgdColor = backgroundpix[i];
 			
-			// currentValf = backgroundPixelsF[i];
-			// backgroundValf = backgroundPixelsF[i];
 			
-			currentVal = currColor;
-			backgroundVal = bkgdColor;
-			
-//			switch (colormode) {
-//				case RED:
-//					currentVal = (currColor) & 0xFF;
-//					backgroundVal = (bkgdColor) & 0xFF;
-//					break;
-//				case GREEN:
-//					currentVal = (currColor >> 8) & 0xFF;
-//					backgroundVal = (bkgdColor >> 8) & 0xFF;
-//					break;
-//				default:
-//				case BLUE:
-//					currentVal = (currColor >> 16) & 0xFF;
-//					backgroundVal = (bkgdColor >> 16) & 0xFF;
-//					break;
-////				case LUMA601:
-////					float pixval3 = (float) (0.299f * ((currColor) & 0xFF)
-////											+ 0.587 * ((currColor >> 8) & 0xFF) + 0.114 * ((currColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					float bgval3 = (float) (0.299f * ((bkgdColor) & 0xFF)
-////										   + 0.587 * ((bkgdColor >> 8) & 0xFF) + 0.114 * ((bkgdColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					currentVal = (int) pixval3;
-////					backgroundVal = (int) bgval3;
-////					break;
-////				case LUMA709:
-////					float pixval1 = (float) (0.2126f * ((currColor) & 0xFF)
-////											 + 0.7152 * ((currColor >> 8) & 0xFF) + 0.0722 * ((currColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					float bgval1 = (float) (0.2126f * ((bkgdColor) & 0xFF)
-////											+ 0.7152 * ((bkgdColor >> 8) & 0xFF) + 0.0722 * ((bkgdColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					// 709
-////					currentVal = (int) pixval1;
-////					backgroundVal = (int) bgval1;
-////					break;
-//				case LUMAUSER:
-//					float pixval2 = (lumausercoefs[0] * ((currColor) & 0xFF)
-//									 + lumausercoefs[1] * ((currColor >> 8) & 0xFF) + lumausercoefs[2]
-//									 * ((currColor >> 16) & 0xFF)) + 0.5f; // CCIR
-//					// 709
-//					float bgval2 = (lumausercoefs[0] * ((bkgdColor) & 0xFF)
-//									+ lumausercoefs[1] * ((bkgdColor >> 8) & 0xFF) + lumausercoefs[2]
-//									* ((bkgdColor >> 16) & 0xFF)) + 0.5f; // CCIR
-//					// 709
-//					currentVal = (int) pixval2;
-//					backgroundVal = (int) bgval2;
-//					break;
-//					
-//			}
-			
-//			backgroundPixelsF[i] += (backgroundVal - backgroundPixelsF[i])
-//			* fease;
-//			currentPixelsF[i] += (currentVal - currentPixelsF[i]) * fease;
-			
-			diffVal = ABS(currentVal - backgroundVal);
+			diffVal = ABS(currColor - bkgdColor);
 //			diffValf = ABS(currentPixelsF[i] - backgroundPixelsF[i]);
 			
 //			differencePixelsF[i] = diffValf;
@@ -139,15 +156,17 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 //			(binarize << 24) | (binarize << 16)
 //			| (binarize << 8) | binarize;
 		}
-		videoimg.update();
+//		videoimg.update();
 		videotexbin.update();
+		
+		videotex = &videotexbin;
 		
 		return videotexbin;
 		
 	} else if (om >= CONTINUOUS_DIFFERENCE) {
 		
 		for (int i = 0; i < numPixels; i++) {
-			int currColor = videoimgpix[i*3+1];
+			int currColor = videoimggraypix[i];
 			int bkgdColor = backgroundpix[i];
 			
 			// currentValf = backgroundPixelsF[i];
@@ -155,57 +174,6 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 			
 			currentVal = currColor;
 			backgroundVal = bkgdColor;
-			
-//			
-//			switch (colormode) {
-//				case RED:
-//					currentVal = (currColor) & 0xFF;
-//					backgroundVal = (bkgdColor) & 0xFF;
-//					break;
-//				case GREEN:
-//					currentVal = (currColor >> 8) & 0xFF;
-//					backgroundVal = (bkgdColor >> 8) & 0xFF;
-//					break;
-//				default:
-//				case BLUE:
-//					currentVal = (currColor >> 16) & 0xFF;
-//					backgroundVal = (bkgdColor >> 16) & 0xFF;
-//					break;
-////				case LUMA601:
-////					float pixval = (float) (0.299f * ((currColor) & 0xFF)
-////											+ 0.587 * ((currColor >> 8) & 0xFF) + 0.114 * ((currColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					float bgval = (float) (0.299f * ((bkgdColor) & 0xFF)
-////										   + 0.587 * ((bkgdColor >> 8) & 0xFF) + 0.114 * ((bkgdColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					// 601
-////					currentVal = (int) pixval;
-////					backgroundVal = (int) bgval;
-////					break;
-////				case LUMA709:
-////					float pixval1 = (float) (0.2126f * ((currColor) & 0xFF)
-////											 + 0.7152 * ((currColor >> 8) & 0xFF) + 0.0722 * ((currColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					float bgval1 = (float) (0.2126f * ((bkgdColor) & 0xFF)
-////											+ 0.7152 * ((bkgdColor >> 8) & 0xFF) + 0.0722 * ((bkgdColor >> 16) & 0xFF)) + 0.5f; // CCIR
-////					// 709
-////					currentVal = (int) pixval1;
-////					backgroundVal = (int) bgval1;
-////					break;
-//				case LUMAUSER:
-//					float pixval2 = (lumausercoefs[0] * ((currColor) & 0xFF)
-//									 + lumausercoefs[1] * ((currColor >> 8) & 0xFF) + lumausercoefs[2]
-//									 * ((currColor >> 16) & 0xFF)) + 0.5f; // CCIR
-//					// 709
-//					float bgval2 = (lumausercoefs[0] * ((bkgdColor) & 0xFF)
-//									+ lumausercoefs[1] * ((bkgdColor >> 8) & 0xFF) + lumausercoefs[2]
-//									* ((bkgdColor >> 16) & 0xFF)) + 0.5f; // CCIR
-//					// 709
-//					currentVal = (int) pixval2;
-//					backgroundVal = (int) bgval2;
-//					break;
-//			}
-//			
-////			backgroundPixelsF[i] += (backgroundVal - backgroundPixelsF[i])
-////			* fease;
-////			currentPixelsF[i] += (currentVal - currentPixelsF[i]) * fease;
 			
 			diffVal = ABS(currentVal - backgroundVal);
 //			diffValf = ABS(currentPixelsF[i] - backgroundPixelsF[i]);
@@ -218,12 +186,12 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 			}
 			
 			videotexbinpix[i] = binarize;
-//			(binarize << 24) | (binarize << 16)
-//			| (binarize << 8) | binarize;
+
 		}
 		
 		
 		videotexbin.update();
+		
 		
 		// now update motion img and use that as base for tracking
 		
@@ -245,14 +213,17 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 			
 		}
 		
-		videoimg.update();
+//		videoimg.update();
 		videotexmotion.update();
+
+		videotex = &videotexmotion;
+
 		
 		// learn background as the frame that just passed
 		if (om == 1)
-			setBackground(videoimg);
+			setBackground(videoimggray);
 		if (om == 2)
-			easeBackground(videoimg);
+			easeBackground(videoimggray);
 		
 		return videotexmotion;
 	}
@@ -268,7 +239,7 @@ void ofxFlob::setBackground (ofImage& img){
 	unsigned char * bgpix = backgroundPixels.getPixels();
 	unsigned char * imgpix = img.getPixels();
 	for(int i=0; i<numPixels; i++){
-		bgpix[i] = imgpix[i*3+1];
+		bgpix[i] = imgpix[i];
 	}
 	backgroundPixels.update();
 	
@@ -277,7 +248,7 @@ void ofxFlob::easeBackground (ofImage& img){
 	unsigned char * bgpix = backgroundPixels.getPixels();
 	unsigned char * imgpix = img.getPixels();
 	for(int i=0; i<numPixels; i++){
-		bgpix[i] += ( imgpix[i*3+1] - bgpix[i] ) * 0.05f;
+		bgpix[i] += ( imgpix[i] - bgpix[i] ) * 0.05f;
 	}
 	backgroundPixels.update();
 	

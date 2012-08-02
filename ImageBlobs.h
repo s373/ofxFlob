@@ -54,10 +54,10 @@ public:
 	void calc(ofImage & image);
 	void copy_blobs_to_previousblobs();
 	
-	ABlob &	  calc_feature_arms(ABlob & b);
-	ABlob &	  calc_feature_head(ABlob & b);
-	ABlob &	  calc_feature_bottom(ABlob & b);
-	ABlob &	  calc_feature_feet(ABlob & b);
+	ABlob *	  calc_feature_arms(ABlob * b);
+	ABlob *	  calc_feature_head(ABlob * b);
+	ABlob *	  calc_feature_bottom(ABlob * b);
+	ABlob *	  calc_feature_feet(ABlob * b);
 	bool testimagemap(int x, int y) {
 		return imagemap[y * w + x];
 		

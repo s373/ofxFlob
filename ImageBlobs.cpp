@@ -79,8 +79,8 @@ void ImageBlobs::calc(ofImage & image) {
 	
 	thecoords.clear();
 	// if (w != pimage.width) {
-	// calcdims(pimage.width, pimage.height, tflob.worldwidth,
-	// tflob.worldheight);
+	// calcdims(pimage.width, pimage.height, tflob->worldwidth,
+	// tflob->worldheight);
 	// }
 //	imagemap = new boolean[numpix];
 	imagemap.assign( numpix, false );
@@ -176,15 +176,15 @@ void ImageBlobs::calc(ofImage & image) {
 						b->dimx = b->boxdimx * wcoordsx;
 						b->dimy = b->boxdimy * wcoordsy;
 //						
-						if (tflob.getAnyFeatureActive()) {
-							if (tflob.trackfeatures[0])
+						if (tflob->getAnyFeatureActive()) {
+							if (tflob->trackfeatures[0])
 								b = calc_feature_head(b);
-							if (tflob.trackfeatures[1]) {
+							if (tflob->trackfeatures[1]) {
 								b = calc_feature_arms(b);
 							}
-							if (tflob.trackfeatures[2])
+							if (tflob->trackfeatures[2])
 								b = calc_feature_feet(b);
-							if (tflob.trackfeatures[3])
+							if (tflob->trackfeatures[3])
 								b = calc_feature_bottom(b);
 						}
 						
@@ -249,15 +249,15 @@ void ImageBlobs::copy_blobs_to_previousblobs(){
  */
 
 
-ABlob &	  ImageBlobs::calc_feature_arms(ABlob & b){
+ABlob *	  ImageBlobs::calc_feature_arms(ABlob * b){
 	//
-	int bx = b.boxminx;
-	int by = b.boxminy;
-	int ex = b.boxmaxx;
-	int ey = b.boxmaxy;
-	// int ey = b.boxcentery;
+	int bx = b->boxminx;
+	int by = b->boxminy;
+	int ex = b->boxmaxx;
+	int ey = b->boxmaxy;
+	// int ey = b->boxcentery;
 	
-	int cx = b.boxcenterx;
+	int cx = b->boxcenterx;
 	
 	int i = 0, j = 0;
 	
@@ -266,8 +266,8 @@ ABlob &	  ImageBlobs::calc_feature_arms(ABlob & b){
 	i = bx;
 	for (j = by; j < ey; j++) {
 		if (testimagemap(i, j)) {
-			b.armleftx = i * wcoordsx;
-			b.armlefty = j * wcoordsy;
+			b->armleftx = i * wcoordsx;
+			b->armlefty = j * wcoordsy;
 			found = true;
 			break;
 		}
@@ -276,15 +276,15 @@ ABlob &	  ImageBlobs::calc_feature_arms(ABlob & b){
 		j = by;
 		for (i = bx; i < cx; i++) {
 			if (testimagemap(i, j)) {
-				b.armleftx = i * wcoordsx;
-				b.armlefty = j * wcoordsy;
+				b->armleftx = i * wcoordsx;
+				b->armlefty = j * wcoordsy;
 				found = true;
 				break;
 			}
 		}
 		if (!found) {
-			b.armleftx = b.boxcenterx * wcoordsx;
-			b.armlefty = b.boxcentery * wcoordsy;
+			b->armleftx = b->boxcenterx * wcoordsx;
+			b->armlefty = b->boxcentery * wcoordsy;
 		}
 	}
 	
@@ -293,8 +293,8 @@ ABlob &	  ImageBlobs::calc_feature_arms(ABlob & b){
 	i = ex;
 	for (j = by; j < ey; j++) {
 		if (testimagemap(i, j)) {
-			b.armrightx = i * wcoordsx;
-			b.armrighty = j * wcoordsy;
+			b->armrightx = i * wcoordsx;
+			b->armrighty = j * wcoordsy;
 			found = true;
 			break;
 		}
@@ -304,15 +304,15 @@ ABlob &	  ImageBlobs::calc_feature_arms(ABlob & b){
 		j = by;
 		for (i = ex - 1; i > cx; i++) {
 			if (testimagemap(i, j)) {
-				b.armrightx = i * wcoordsx;
-				b.armrighty = j * wcoordsy;
+				b->armrightx = i * wcoordsx;
+				b->armrighty = j * wcoordsy;
 				found = true;
 				break;
 			}
 		}
 		if (!found) {
-			b.armrightx = b.boxcenterx * wcoordsx;
-			b.armrighty = b.boxcentery * wcoordsy;
+			b->armrightx = b->boxcenterx * wcoordsx;
+			b->armrighty = b->boxcentery * wcoordsy;
 		}
 	}
 	return b;
@@ -324,7 +324,7 @@ ABlob &	  ImageBlobs::calc_feature_arms(ABlob & b){
 /**
  * ABlob calc_feature_head(ABlob b)<br>
  * <br>
- * calculates where the top center point is in a blob.<br>
+ * calculates where the top center point is in a blob-><br>
  * 
  * @Param ABlob b
  * @return ABlob b
@@ -332,13 +332,13 @@ ABlob &	  ImageBlobs::calc_feature_arms(ABlob & b){
  */
 
 
-ABlob &	  ImageBlobs::calc_feature_head(ABlob & b){
+ABlob *	  ImageBlobs::calc_feature_head(ABlob * b){
 	
-	// int bx = b.boxminx;
-	int by = b.boxminy;
-	int ex = b.boxmaxx;
-	// int ey = b.boxmaxy;
-	int cx = b.boxcenterx;
+	// int bx = b->boxminx;
+	int by = b->boxminy;
+	int ex = b->boxmaxx;
+	// int ey = b->boxmaxy;
+	int cx = b->boxcenterx;
 	int i = 0, j = 0;
 	int k = cx - 1;
 	// head
@@ -346,13 +346,13 @@ ABlob &	  ImageBlobs::calc_feature_head(ABlob & b){
 	for (i = cx; i < ex; i++) {
 		
 		if (testimagemap(i, j)) {
-			b.headx = i * wcoordsx;
-			b.heady = j * wcoordsy;
+			b->headx = i * wcoordsx;
+			b->heady = j * wcoordsy;
 			break;
 		}
 		if (testimagemap(k--, j)) {
-			b.headx = i * wcoordsx;
-			b.heady = j * wcoordsy;
+			b->headx = i * wcoordsx;
+			b->heady = j * wcoordsy;
 			break;
 		}
 	}
@@ -367,7 +367,7 @@ ABlob &	  ImageBlobs::calc_feature_head(ABlob & b){
 /**
  * ABlob calc_feature_bottom(ABlob b)<br>
  * <br>
- * calculates where the bottom center point is in a blob.<br>
+ * calculates where the bottom center point is in a blob-><br>
  * 
  * @Param ABlob b
  * @return ABlob b
@@ -376,14 +376,14 @@ ABlob &	  ImageBlobs::calc_feature_head(ABlob & b){
 
 
 
-ABlob &	  ImageBlobs::calc_feature_bottom(ABlob & b){
+ABlob *	  ImageBlobs::calc_feature_bottom(ABlob * b){
 
 	
-	int ex = b.boxmaxx;
-	int ey = b.boxmaxy;
+	int ex = b->boxmaxx;
+	int ey = b->boxmaxy;
 	
-	int cx = b.boxcenterx;// (bx+ex)/2;///b.boxdimx/2 + bx;
-	// int cy = b.boxcentery;//(by+ey)/2;//b.boxdimy/2 + by;
+	int cx = b->boxcenterx;// (bx+ex)/2;///b->boxdimx/2 + bx;
+	// int cy = b->boxcentery;//(by+ey)/2;//b->boxdimy/2 + by;
 	
 	// cx = PApplet.constrain(cx ,0,w-1);
 	// cy = PApplet.constrain(cy ,0,h-1);
@@ -396,8 +396,8 @@ ABlob &	  ImageBlobs::calc_feature_bottom(ABlob & b){
 	j = ey;
 	for (i = cx; i < ex; i++) {
 		if (testimagemap(i, j)) {
-			b.bottomx = i * wcoordsx;
-			b.bottomy = j * wcoordsy;
+			b->bottomx = i * wcoordsx;
+			b->bottomy = j * wcoordsy;
 			found = true;
 			break;
 			
@@ -407,8 +407,8 @@ ABlob &	  ImageBlobs::calc_feature_bottom(ABlob & b){
 	if (!found) {
 		for (i = 0; i <= cx; i++) {
 			if (testimagemap(i, j)) {
-				b.bottomx = i * wcoordsx;
-				b.bottomy = j * wcoordsy;
+				b->bottomx = i * wcoordsx;
+				b->bottomy = j * wcoordsy;
 				found = true;
 				break;
 				
@@ -417,8 +417,8 @@ ABlob &	  ImageBlobs::calc_feature_bottom(ABlob & b){
 	}
 	
 	if (!found) {
-		b.bottomx = b.boxcenterx * wcoordsx;
-		b.bottomy = ey * wcoordsy;
+		b->bottomx = b->boxcenterx * wcoordsx;
+		b->bottomy = ey * wcoordsy;
 		
 	}
 	
@@ -435,22 +435,22 @@ ABlob &	  ImageBlobs::calc_feature_bottom(ABlob & b){
 /**
  * ABlob calc_feature_feet(ABlob b)<br>
  * <br>
- * calculates where the left and right bottom points are in a blob.<br>
+ * calculates where the left and right bottom points are in a blob-><br>
  * 
  * @Param ABlob b
  * @return ABlob b
  * 
  */
 
-ABlob &	  ImageBlobs::calc_feature_feet(ABlob & b){
+ABlob *	  ImageBlobs::calc_feature_feet(ABlob * b){
 	// /passed to 2 feet instead of one bottom
-	int bx = CLAMP(b.boxminx, 0, w - 1);
-	// int by = PApplet.constrain(b.boxminy,0,h-1);
-	int ex = CLAMP(b.boxmaxx, 0, w - 1);
-	int ey = CLAMP(b.boxmaxy, 0, h - 1);
+	int bx = CLAMP(b->boxminx, 0, w - 1);
+	// int by = PApplet.constrain(b->boxminy,0,h-1);
+	int ex = CLAMP(b->boxmaxx, 0, w - 1);
+	int ey = CLAMP(b->boxmaxy, 0, h - 1);
 	
-	int cx = b.boxcenterx;// (bx+ex)/2;///b.boxdimx/2 + bx;
-	int cy = b.boxcentery;// (by+ey)/2;//b.boxdimy/2 + by;
+	int cx = b->boxcenterx;// (bx+ex)/2;///b->boxdimx/2 + bx;
+	int cy = b->boxcentery;// (by+ey)/2;//b->boxdimy/2 + by;
 	
 	cx = CLAMP(cx, 0, w - 1);
 	cy = CLAMP(cy, 0, h - 1);
@@ -461,9 +461,9 @@ ABlob &	  ImageBlobs::calc_feature_feet(ABlob & b){
 	j = ey;
 	for (i = bx; i < cx; i++) {
 		if (testimagemap(i, j)) {
-			b.footleftx = i * wcoordsx;
-			b.footlefty = j * wcoordsx;
-			// System.out.print("found armleft at "+b.armleftx+" "+b.armlefty
+			b->footleftx = i * wcoordsx;
+			b->footlefty = j * wcoordsx;
+			// System.out.print("found armleft at "+b->armleftx+" "+b->armlefty
 			// );
 			break;
 			
@@ -473,8 +473,8 @@ ABlob &	  ImageBlobs::calc_feature_feet(ABlob & b){
 	j = ey;
 	for (i = ex - 1; i > cx; i--) {
 		if (testimagemap(i, j)) {
-			b.footrightx = i * wcoordsx;
-			b.footrighty = j * wcoordsy;
+			b->footrightx = i * wcoordsx;
+			b->footrighty = j * wcoordsy;
 			break;
 		}
 	}

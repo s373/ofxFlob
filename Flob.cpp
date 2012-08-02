@@ -24,7 +24,7 @@ void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
 
 	colormode = GREEN;
 	
-	for(int i=0; i<5;i++) trackfeatures[i] = false;
+	for(int i=0; i<5;i++) trackfeatures[i] = true;
 	videoimg.allocate(videoresw, videoresh, OF_IMAGE_COLOR);
 	videotexbin.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
 	videotexmotion.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
@@ -61,7 +61,7 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 		
 	
 	if (om == STATIC_DIFFERENCE) {
-	
+//		cout << "stt"<<endl;
 		
 		for (int i = 0; i < numPixels; i++) {
 			int currColor = videoimgpix[i*3+1];
@@ -130,7 +130,7 @@ ofImage & ofxFlob::binarize (unsigned char * pix){
 			
 			int binarize = 0;
 			// if (diffVal > videothresh) {
-			if (diffValf > videothresh) {
+			if (diffVal > videothresh) {
 				presence += 1;
 				binarize = 255;
 			}

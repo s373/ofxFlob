@@ -13,13 +13,11 @@
 ofxFlob::~ofxFlob() {}
 
 ofxFlob::ofxFlob() {		
-	numPixels = 0;
-	
+	numPixels = 0;	
 	videoresw = videoresh = 128;
 	presence = 0;
 	videotexmode = pvideotexmode = 0;
-	videotexchange = false;
-	
+	videotexchange = false;	
 	videothresh = 25;
 	videofade = 12;
 	mirrorX = false, mirrorY = false;
@@ -28,30 +26,22 @@ ofxFlob::ofxFlob() {
 	om = CONTINUOUS_DIFFERENCE;
 	colormode = GREEN;	
 	bglowpass = 0.05;	
-	trackedBlobLifeTime = 100;
-	
+	trackedBlobLifeTime = 100;	
 }
 
 
 void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
 	videoresw = srcW; videoresh = srcH;
 	worldwidth = dstW; worldheight = dstH;
-
-	colormode = GREEN;
 	
 	for(int i=0; i<5;i++) trackfeatures[i] = true;
 	videoimggray.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);	
 	videotexbin.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
 	videotexmotion.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
-//	videoteximgmotion.allocate(videoresw, videoresh, OF_IMAGE_COLOR);
-//	videotex.allocate(videoresw, videoresh, OF_IMAGE_COLOR_ALPHA);
 	videotex = &videoimggray;
 	numPixels = videoresw * videoresh * 1;
-	backgroundPixels.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
-	
-	imageblobs.setup(this);
-	
-	bglowpass = 0.0121;
+	backgroundPixels.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);	
+	imageblobs.setup(this);	
 }
 
 

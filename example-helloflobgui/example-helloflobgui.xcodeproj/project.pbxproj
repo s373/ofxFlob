@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0088516B15CBC08B00DBB2AB /* ImageBlobs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0088516515CBC08B00DBB2AB /* ImageBlobs.cpp */; };
-		0088516C15CBC08B00DBB2AB /* ofxFlob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0088516715CBC08B00DBB2AB /* ofxFlob.cpp */; };
+		00884D3115CAFA3C00DBB2AB /* ofxFlob.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00884D2B15CAFA3C00DBB2AB /* ofxFlob.cpp */; };
+		00884D3215CAFA3C00DBB2AB /* ImageBlobs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 00884D2D15CAFA3C00DBB2AB /* ImageBlobs.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworks.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworks.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -59,14 +59,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		00884D2A15CAFA3C00DBB2AB /* ABlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ABlob.h; path = ../../../addons/ofxFlob/src/ABlob.h; sourceTree = SOURCE_ROOT; };
+		00884D2B15CAFA3C00DBB2AB /* ofxFlob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFlob.cpp; sourceTree = "<group>"; };
+		00884D2C15CAFA3C00DBB2AB /* ofxFlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFlob.h; sourceTree = "<group>"; };
+		00884D2D15CAFA3C00DBB2AB /* ImageBlobs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageBlobs.cpp; path = ../../../addons/ofxFlob/src/ImageBlobs.cpp; sourceTree = SOURCE_ROOT; };
+		00884D2E15CAFA3C00DBB2AB /* ImageBlobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageBlobs.h; path = ../../../addons/ofxFlob/src/ImageBlobs.h; sourceTree = SOURCE_ROOT; };
+		00884D2F15CAFA3C00DBB2AB /* pt2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pt2.h; path = ../../../addons/ofxFlob/src/pt2.h; sourceTree = SOURCE_ROOT; };
+		00884D3015CAFA3C00DBB2AB /* trackedBlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = trackedBlob.h; path = ../../../addons/ofxFlob/src/trackedBlob.h; sourceTree = SOURCE_ROOT; };
 		00884D4615CAFBD500DBB2AB /* readme */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme; sourceTree = "<group>"; };
-		0088516415CBC08B00DBB2AB /* ABlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ABlob.h; path = ../../../addons/ofxFlob/src/ABlob.h; sourceTree = SOURCE_ROOT; };
-		0088516515CBC08B00DBB2AB /* ImageBlobs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ImageBlobs.cpp; path = ../../../addons/ofxFlob/src/ImageBlobs.cpp; sourceTree = SOURCE_ROOT; };
-		0088516615CBC08B00DBB2AB /* ImageBlobs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ImageBlobs.h; path = ../../../addons/ofxFlob/src/ImageBlobs.h; sourceTree = SOURCE_ROOT; };
-		0088516715CBC08B00DBB2AB /* ofxFlob.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxFlob.cpp; path = ../../../addons/ofxFlob/src/ofxFlob.cpp; sourceTree = SOURCE_ROOT; };
-		0088516815CBC08B00DBB2AB /* ofxFlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxFlob.h; path = ../../../addons/ofxFlob/src/ofxFlob.h; sourceTree = SOURCE_ROOT; };
-		0088516915CBC08B00DBB2AB /* pt2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = pt2.h; path = ../../../addons/ofxFlob/src/pt2.h; sourceTree = SOURCE_ROOT; };
-		0088516A15CBC08B00DBB2AB /* trackedBlob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = trackedBlob.h; path = ../../../addons/ofxFlob/src/trackedBlob.h; sourceTree = SOURCE_ROOT; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -118,23 +118,23 @@
 		00884CC715CAFA3C00DBB2AB /* ofxFlob */ = {
 			isa = PBXGroup;
 			children = (
-				0088516315CBC08B00DBB2AB /* src */,
+				00884D2915CAFA3C00DBB2AB /* src */,
 				00884D4615CAFBD500DBB2AB /* readme */,
 			);
 			name = ofxFlob;
 			path = ../../../addons/ofxFlob;
 			sourceTree = SOURCE_ROOT;
 		};
-		0088516315CBC08B00DBB2AB /* src */ = {
+		00884D2915CAFA3C00DBB2AB /* src */ = {
 			isa = PBXGroup;
 			children = (
-				0088516415CBC08B00DBB2AB /* ABlob.h */,
-				0088516515CBC08B00DBB2AB /* ImageBlobs.cpp */,
-				0088516615CBC08B00DBB2AB /* ImageBlobs.h */,
-				0088516715CBC08B00DBB2AB /* ofxFlob.cpp */,
-				0088516815CBC08B00DBB2AB /* ofxFlob.h */,
-				0088516915CBC08B00DBB2AB /* pt2.h */,
-				0088516A15CBC08B00DBB2AB /* trackedBlob.h */,
+				00884D2A15CAFA3C00DBB2AB /* ABlob.h */,
+				00884D2B15CAFA3C00DBB2AB /* ofxFlob.cpp */,
+				00884D2C15CAFA3C00DBB2AB /* ofxFlob.h */,
+				00884D2D15CAFA3C00DBB2AB /* ImageBlobs.cpp */,
+				00884D2E15CAFA3C00DBB2AB /* ImageBlobs.h */,
+				00884D2F15CAFA3C00DBB2AB /* pt2.h */,
+				00884D3015CAFA3C00DBB2AB /* trackedBlob.h */,
 			);
 			name = src;
 			path = ../../../addons/ofxFlob/src;
@@ -251,7 +251,7 @@
 /* Begin PBXProject section */
 		E4B69B4C0A3A1720003C02F2 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-helloflob" */;
+			buildConfigurationList = E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-helloflobgui" */;
 			compatibilityVersion = "Xcode 2.4";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -310,8 +310,8 @@
 			files = (
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,
 				E4B69E210A3A1BDC003C02F2 /* testApp.cpp in Sources */,
-				0088516B15CBC08B00DBB2AB /* ImageBlobs.cpp in Sources */,
-				0088516C15CBC08B00DBB2AB /* ofxFlob.cpp in Sources */,
+				00884D3115CAFA3C00DBB2AB /* ofxFlob.cpp in Sources */,
+				00884D3215CAFA3C00DBB2AB /* ImageBlobs.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,7 +567,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-helloflob" */ = {
+		E4B69B4D0A3A1720003C02F2 /* Build configuration list for PBXProject "example-helloflobgui" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				E4B69B4E0A3A1720003C02F2 /* Debug */,

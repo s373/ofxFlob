@@ -20,11 +20,44 @@ void testApp::setup(){
 	cout << flob.videoresw << " : " << flob.videoresh << "\n ";
 	
 
+	
+	ofPoint loc(20, 20);
+	ofPoint dim(220, 25);
+	panel.setup("ofxflob",loc, dim);		
+		
+	panel.addSlider("flobdim", 128, 10, 512)->setClamp(true);
+	panel.addSlider("thresh", 55, 0, 255)->setClamp(true);
+	panel.addSlider("fade", 50, 0, 255)->setClamp(true);
+	panel.addSlider("presence", 0, 0, 1)->setClamp(true);
+	panel.addSlider("fps", 0, 0, 1000)->setClamp(true);
+	panel.addSlider("blobs", 0, 0, 20);
+	panel.addSlider("bglowpass", 0.0021, 0.0000000001, 0.1)->setClamp(true);
+
+	panel.dim.set(20,20);
+	panel.addRadioButton("om", 2);
+	panel.addButton("mirrorX", 1);
+	panel.addButton("mirrorY", 0);
+	
+
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
-			
+	panel.update();
+	
+	if(panel.isValsNew("flobdim")){
+		int dim = (int)panel.get("flobdim");
+		flob .setup(dim,dim, ofGetWidth(), ofGetHeight());
+	}
+	
+	
+	flob.videothresh = panel.get("thresh");
+	flob.videofade = panel.get("fade");
+	flob.om = panel.get("om");
+	flob.mirrorX = panel.get("mirrorX");
+	flob.mirrorY = panel.get("mirrorY");
+	flob.bglowpass = panel.get("bglowpass");
+	
 	vidGrabber.grabFrame();
 	if(vidGrabber.isFrameNew()){
 		blobs = flob.calc(	
@@ -33,6 +66,10 @@ void testApp::update(){
 										(int)vidGrabber.getHeight() ) );		
 	}
 	
+	panel.set("presence", flob.getPresencef() );
+	panel.set("fps", ofGetFrameRate() );
+	if(blobs!=NULL)
+		panel.set("blobs", blobs->size());
 }
 
 
@@ -58,50 +95,25 @@ void testApp::draw(){
 			ofSetColor(0,0,255,100);
 			ofRect(ab.bx, ab.by, ab.dimx, ab.dimy);
 			ofSetColor(0,255,0,200);
-			ofRect(ab.cx, ab.cy, 10,10);
-							
+			ofRect(ab.cx, ab.cy, 15,15);
+			
+			ofLine(ab.cx, ab.cy, ab.armleftx, ab.armlefty);
+			ofLine(ab.cx, ab.cy, ab.armrightx, ab.armrighty);
+			ofLine(ab.cx, ab.cy, ab.headx, ab.heady);
+			ofLine(ab.cx, ab.cy, ab.footleftx, ab.footlefty);
+			ofLine(ab.cx, ab.cy, ab.footrightx, ab.footrighty);
+			ofLine(ab.cx, ab.cy, ab.bottomx, ab.bottomy);
+			
+				
 		}
 	}
 	
-	string info = "ofxflob info:\n";
-	info += "<t/T> thresh: " + ofToString(flob.videothresh) + "\n";
-	info += "<f/F> fade: " + ofToString(flob.videofade) + "\n";
-	info += "<o> om: " + ofToString(flob.om) + "\n";
-	info += "<x> mirrorx: " + ofToString(flob.mirrorX) + "\n";
-	info += "<y> mirrory: " + ofToString(flob.mirrorY) + "\n";
+	panel.draw();
 	
-	ofSetColor(255);
-	ofDrawBitmapString(info, 10,20);
-		
 }
 
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){
-
-	
-	if(key=='t'){
-		flob.videothresh--;	
-	}
-	if(key=='T'){
-		flob.videothresh++;	
-	}
-	if(key=='f'){
-		flob.videofade--;	
-	}
-	if(key=='F'){
-		flob.videofade++;	
-	}
-	if(key=='o'){
-		flob.om ^= 1;	
-	}
-	if(key=='x'){
-		flob.mirrorX ^= true;	
-	}
-	if(key=='y'){
-		flob.mirrorY ^= true;	
-	}
-	
-	
 }
 
 //--------------------------------------------------------------

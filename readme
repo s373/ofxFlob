@@ -1,22 +1,26 @@
 ofxFlob
+a simple blob tracker by s373.net/x
+
 
 
 flob is a fast flood-fill multi-blob detector
 
-
 this is a port of flob core funcionality for openframeworks c++ 
 
-
 flob is a simple alternative to opencv, for simple blob tracking and skeleton finding
-
 
 flob is a lib developped in processing 2009
 http://s373.net/code/flob
 
-
 had it's infancy as a max/jitter external called 'a-jit.human', 2006
 http://s373.net/projectos/747.3/
 
-
+example in of0071
 
 licensed under lgpl
+
+copyright 2006, 2012 André Sier
+
+astronaut @ s373.net
+
+20120802

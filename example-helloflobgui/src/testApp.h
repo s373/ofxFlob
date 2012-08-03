@@ -4,6 +4,7 @@
 
 #include "ofMain.h"
 #include "ofxFlob.h"
+#include "OPanel.h"
 
 class testApp : public ofBaseApp{
 
@@ -26,6 +27,7 @@ class testApp : public ofBaseApp{
 	
 	ofVideoGrabber	vidGrabber;
 	ofxFlob flob;
+	OPanel panel;
 	
 	vector<ABlob*> *blobs;
 	

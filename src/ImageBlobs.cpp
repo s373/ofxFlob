@@ -8,7 +8,7 @@
  */
 
 #include "ImageBlobs.h"
-#include "Flob.h"
+#include "ofxFlob.h"
 
 
 void ImageBlobs::setup(ofxFlob *flob){	

@@ -312,3 +312,21 @@ vector<ABlob*>* ofxFlob::calc (ofImage& bin){
 	return &imageblobs.theblobs;
 }
 
+vector<trackedBlob*>*  ofxFlob::calcsimple( ofImage & bin ){
+	imageblobs.calc(bin);
+	return imageblobs.calcsimple();
+
+}
+
+vector<trackedBlob*>*  ofxFlob::track( ofImage & bin ){
+	imageblobs.calc(bin);
+	imageblobs.dotracking();
+	return &imageblobs.trackedblobs;
+}
+
+vector<trackedBlob*>*  ofxFlob::tracksimple( ofImage & bin ){
+	imageblobs.calc(bin);
+	return imageblobs.tracksimple();
+
+}
+

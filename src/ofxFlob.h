@@ -105,7 +105,10 @@ public:
 	
 	ofImage & binarize (unsigned char * pix, int width, int height);
 	
-	vector<ABlob*>*  calc( ofImage & bin ); 
+	vector<ABlob*>*			calc( ofImage & bin ); 
+	vector<trackedBlob*>*	calcsimple( ofImage & bin ); 
+	vector<trackedBlob*>*	track( ofImage & bin ); 
+	vector<trackedBlob*>*	tracksimple( ofImage & bin ); 
 	
 	float getPresencef(){
 		return presencef;

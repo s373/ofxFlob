@@ -14,6 +14,7 @@
 #include "baseBlob.h"
 #include "ABlob.h"
 #include "trackedBlob.h"
+#include "quadBlob.h"
 #include "pt2.h"
 
 class ofxFlob; // fwddecl
@@ -38,10 +39,10 @@ public:
 	
 	vector				<ABlob *>				theblobs;
 //	vector				<ABlob *>				prevblobs;
-//	vector				<trackedBlob>		trackedblobs;
-//	vector				<trackedBlob>		prevtrackedblobs;
-//	vector				<trackedBlob>		tbsimplelist;
-	vector				<pt2 *>				thecoords;
+//	vector				<trackedBlob *>			trackedblobs;
+//	vector				<trackedBlob *>			prevtrackedblobs;
+//	vector				<trackedBlob *>			tbsimplelist;
+	vector				<pt2 *>					thecoords;
 
 	ofxFlob				*tflob;
 	

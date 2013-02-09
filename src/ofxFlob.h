@@ -99,7 +99,7 @@ public:
 	~ofxFlob();
 	ofxFlob ();
 
-	void setup(int srcW, int srcH, float dstW, float dstH);
+	void setup(const int srcW=127,const int srcH=127, const float dstW=ofGetWidth(), const float dstH = ofGetHeight());
 	
 	/// 
 	

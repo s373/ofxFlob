@@ -36,7 +36,7 @@ public:
 	~trackedBlob(){}
 	trackedBlob();
 	
-	trackedBlob (trackedBlob & b) {
+	trackedBlob (const trackedBlob & b) {
 	
 		newblob = b.newblob;
 		birthtime = b.birthtime;
@@ -68,7 +68,7 @@ public:
 	}
 	
 	
-	trackedBlob ( ABlob &a , trackedBlob & b) {
+	trackedBlob (const ABlob &a ,const trackedBlob & b) {
 		//super(a);
 		id = b.id;
 		pixelcount = b.pixelcount;
@@ -114,7 +114,7 @@ public:
 	}
 	
 	
-	trackedBlob ( ABlob &b) {
+	trackedBlob (const ABlob &b) {
 		//super(b);
 		//ABlob::ABlob(b);		
 		id = b.id;

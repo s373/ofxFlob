@@ -9,8 +9,11 @@
 
 #include "ofxFlob.h"
 
-///
+
+
 ofxFlob::~ofxFlob() {}
+
+
 
 ofxFlob::ofxFlob() {		
 	numPixels = 0;	
@@ -26,7 +29,7 @@ ofxFlob::ofxFlob() {
 	om = CONTINUOUS_DIFFERENCE;
 	colormode = GREEN;	
 	thresholdmode = ABSDIF;
-	continuous_ease = 0.05;	
+	continuous_ease = 0.10f;	
 	trackedBlobLifeTime = 100;	
 	floatmode = true;
 	floatsmooth = 0.555f;
@@ -34,7 +37,9 @@ ofxFlob::ofxFlob() {
 }
 
 
-void ofxFlob::setup(int srcW, int srcH, float dstW, float dstH){
+
+
+void ofxFlob::setup(const int srcW,const int srcH, const float dstW, const float dstH ){
 	videoresw = srcW; videoresh = srcH;
 	worldwidth = dstW; worldheight = dstH;
 	
@@ -49,6 +54,7 @@ void ofxFlob::setup(int srcW, int srcH, float dstW, float dstH){
 	currentLuma.assign(numPixels,0.0f);
 	imageblobs.setup(this);	
 }
+
 
 
 
@@ -109,7 +115,6 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 															 + (videoresh - j - 1) * videoresw ];
 			}
 		}
-//		videoimggray.update();
 		delete[] image;
 		
 	} else if (mirrorX && !mirrorY) {
@@ -122,7 +127,6 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 			}
 		}
 		
-//		videoimggray.update();
 		delete[] scanline;
 		
 	} else if (!mirrorX && mirrorY) {
@@ -136,7 +140,6 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 			}
 		}
 		
-//		videoimggray.update();
 		delete[] scanline;
 	}
 	
@@ -230,8 +233,6 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 	
 	
 	if (om > STATIC_DIFFERENCE) {
-		
-		
 		// now update motion img and use that as base for tracking
 		
 		unsigned char * videotexmotionpix = videotexmotion.getPixels();
@@ -259,9 +260,9 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 		videotex = &videotexmotion;
 		
 		// learn background as the frame that just passed
-		if (om == 1)
+		if (om == 1) 
 			setBackground(videoimggray);
-		if (om == 2)
+		else 
 			easeBackground(videoimggray);
 		
 		return videotexmotion;
@@ -298,7 +299,8 @@ void ofxFlob::easeBackground (ofImage& img){
 	unsigned char * imgpix = img.getPixels();
 		
 	for(int i=0; i<numPixels; i++){
-		bgpix[i] += (int)(((float)imgpix[i] - (float)bgpix[i] ) * continuous_ease);
+		if(ABS(bgpix[i]-imgpix[i])>1e-5)
+			bgpix[i] += (unsigned char)(((float)imgpix[i] - (float)bgpix[i] ) * continuous_ease);
 	}
 	backgroundPixels.update();
 	

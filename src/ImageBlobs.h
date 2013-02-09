@@ -11,6 +11,7 @@
 
 
 #include "ofMain.h" 
+#include "baseBlob.h"
 #include "ABlob.h"
 #include "trackedBlob.h"
 #include "pt2.h"
@@ -50,7 +51,7 @@ public:
 	
 	void setup( ofxFlob *flob );
 	
-	void calcdims(int w, int h, int ww, int wh);	
+	void calcdims(const int w, const int h, const float ww, const float wh);
 	void calc(ofImage & image);
 	void copy_blobs_to_previousblobs();
 	
@@ -58,7 +59,7 @@ public:
 	ABlob *	  calc_feature_head(ABlob * b);
 	ABlob *	  calc_feature_bottom(ABlob * b);
 	ABlob *	  calc_feature_feet(ABlob * b);
-	bool testimagemap(int x, int y) {
+	inline bool testimagemap(const int x, const int y) {
 		return imagemap[y * w + x];
 		
 	}

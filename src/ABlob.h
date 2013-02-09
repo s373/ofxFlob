@@ -6,25 +6,47 @@
  *  Copyright 2010 s373.net/x. All rights reserved.
  *
  */
-
+/**
+ * Flob
+ * Fast multi-blob detector and simple skeleton tracker using flood-fill algorithms.
+ * http://s373.net/code/flob
+ *
+ * Copyright (C) 2008-2013 Andre Sier http://s373.net
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * 
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General
+ * Public License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA  02111-1307  USA
+ * 
+ * @author      Andre Sier 
+ * @modified    20130208
+ * @version     0.2.2y (22)
+ * @url			http://s373.net/code/flob
+ */
 
 #pragma once
 
-#include "ofMain.h" 
+#include "baseBlob.h" 
 
 
-class ABlob {
+class ABlob : public baseBlob {
 public:
 	
-	 int id;
-	 int pixelcount;
-	 int boxminx,boxminy,boxmaxx,boxmaxy;
-	 int boxcenterx,boxcentery;
 	 int boxdimx,boxdimy;
 	 int pboxcenterx,pboxcentery;
-	//normalized values
+	 // normalized to desired output coords vals
 	 float cx, cy;
-	float bx, by; //beginx beginy
+	 float bx, by; //beginx beginy
 	//  float pcx,pcy;
 	 float dimx, dimy;
 	

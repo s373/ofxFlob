@@ -18,19 +18,23 @@ ofxFlob::ofxFlob() {
 	presence = 0;
 	videotexmode = pvideotexmode = 0;
 	videotexchange = false;	
-	videothresh = 25;
-	videofade = 12;
+	videothreshf = videothresh = 25;
+	videofadef = videofade = 12;
 	mirrorX = false, mirrorY = false;
 	worldwidth = worldheight = 700;
 	blur = 0;
 	om = CONTINUOUS_DIFFERENCE;
 	colormode = GREEN;	
-	bglowpass = 0.05;	
+	thresholdmode = ABSDIF;
+	continuous_ease = 0.05;	
 	trackedBlobLifeTime = 100;	
+	floatmode = true;
+	floatsmooth = 0.555f;
+	bdoclear = true;
 }
 
 
-void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
+void ofxFlob::setup(int srcW, int srcH, float dstW, float dstH){
 	videoresw = srcW; videoresh = srcH;
 	worldwidth = dstW; worldheight = dstH;
 	
@@ -40,7 +44,9 @@ void ofxFlob::setup(int srcW, int srcH, int dstW, int dstH){
 	videotexmotion.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
 	videotex = &videoimggray;
 	numPixels = videoresw * videoresh * 1;
-	backgroundPixels.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);	
+	backgroundPixels.allocate(videoresw, videoresh, OF_IMAGE_GRAYSCALE);
+	backgroundLuma.assign(numPixels,0.0f);
+	currentLuma.assign(numPixels,0.0f);
 	imageblobs.setup(this);	
 }
 
@@ -52,38 +58,44 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 	unsigned char * backgroundpix = backgroundPixels.getPixels();
 	unsigned char * videotexbinpix = videotexbin.getPixels();
 
-	
+	ofImage src;
 	if(width!=videoresw||height!=videoresh){
-		ofImage src;
 		src.setFromPixels(pix, width, height, OF_IMAGE_COLOR);
 		src.resize(videoresw, videoresh);
-		unsigned char * srcpix = src.getPixels();
-		
-		for(int i=0; i<numPixels;i++){
-			videoimggraypix[i] = srcpix[i*3+1]; //g	
-		}
-		
-	} else {
-		
-		for(int i=0; i<numPixels;i++){
-			//		videoimggraypix[i] = videoimgpix[i*3+1]; //g	
-			videoimggraypix[i] = pix[i*3+1]; //g	
-		}
-		
+		pix = src.getPixels();
 	}
+
 	
-	videoimggray.update();
+	// colormode pass	rgb->luma
+	for(int i=0; i<numPixels;i++){
+		int pixval = 0;		
+		int loc = i*3;
+		switch (colormode) {
+			case RED: pixval = pix[loc]; break;
+			case GREEN: pixval = pix[loc+1]; break;
+			case BLUE: pixval = pix[loc+2]; break;
+			case LUMA601:
+				pixval = (0.299f * pix[loc] + 0.587f * pix[loc+1] + 0.114f * pix[loc+2] +0.5f);
+				break;
+			case LUMA709:
+				pixval = (0.2126f * pix[loc] + 0.7152f * pix[loc+1] + 0.0722f * pix[loc+2] +0.5f);
+				break;
+			case LUMAUSER:
+				pixval = (lumausercoefs[0] * pix[loc] + lumausercoefs[1] * pix[loc+1] + lumausercoefs[2] * pix[loc+2] +0.5f);
+				break;				
+		}
+		
+		videoimggraypix[i] = pixval;
+	}
+		
 	
-	// 
-	int currentVal = 0, backgroundVal = 0, diffVal = 0;
-	// float currentValf = 0, backgroundValf = 0, diffValf = 0;
-	float diffValf = 0;	
-	float fease = 0.17f;	
 	
-	presence = 0;
+//	videoimggray.update();
+	
+
 	
 	
-	// implementing mirror
+	// pixelMirror implementation as
 	
 	if (mirrorX && mirrorY) {
 		int* image = new int[numPixels]; // one image to flipx&y
@@ -97,7 +109,7 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 															 + (videoresh - j - 1) * videoresw ];
 			}
 		}
-		videoimggray.update();
+//		videoimggray.update();
 		delete[] image;
 		
 	} else if (mirrorX && !mirrorY) {
@@ -110,7 +122,7 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 			}
 		}
 		
-		videoimggray.update();
+//		videoimggray.update();
 		delete[] scanline;
 		
 	} else if (!mirrorX && mirrorY) {
@@ -124,81 +136,122 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 			}
 		}
 		
-		videoimggray.update();
+//		videoimggray.update();
 		delete[] scanline;
+	}
+	
+	videoimggray.update();
+
+	
+	// core binarize
+	int currentVal = 0, backgroundVal = 0, diffVal = 0;
+	float currentValf = 0, backgroundValf = 0, diffValf = 0;
+		
+	presence = 0;
+	
+	
+	for(int i=0; i<numPixels;i++){
+		 currentVal = videoimggraypix[i];
+		 backgroundVal = backgroundpix[i];
+		
+		int binarize = 0;
+		
+		if(floatmode){
+			if(ABS(currentLuma[i]-currentVal)>1e-5) currentLuma[i] += ((float)currentVal-currentLuma[i])*floatsmooth;
+			if(ABS(backgroundLuma[i]-backgroundVal)>1e-5) backgroundLuma[i] += ((float)backgroundVal-backgroundLuma[i])*floatsmooth;
+			currentValf = currentLuma[i];
+			backgroundValf = backgroundLuma[i];
+			
+			switch(thresholdmode){
+				case ABSDIF: 
+					diffValf = ABS(currentValf-backgroundValf); 
+					if (diffValf >= videothreshf) {
+						presence += 1;
+						binarize = 255;
+					}
+					break;
+				case LESSER: 
+					diffValf = currentValf-backgroundValf; 
+					if (diffValf <= videothreshf) {
+						presence += 1;
+						binarize = 255;
+					}
+					break;
+				case GREATER: 
+					diffValf = currentValf-backgroundValf; 
+					if (diffValf >= videothreshf) {
+						presence += 1;
+						binarize = 255;
+					}
+					break;
+			}
+		} else {
+			
+			switch(thresholdmode){
+				case ABSDIF: 
+					diffVal = ABS(currentVal-backgroundVal); 
+					if (diffVal >= videothresh) {
+						presence += 1;
+						binarize = 255;
+					}
+					break;
+				case LESSER: 
+					diffVal = currentVal-backgroundVal; 
+					if (diffVal <= videothresh) {
+						presence += 1;
+						binarize = 255;
+					}
+					break;
+				case GREATER: 
+					diffVal = currentVal-backgroundVal; 
+					if (diffVal >= videothresh) {
+						presence += 1;
+						binarize = 255;
+					}
+					break;
+			}
+			
+		}
+		
+		// encode pix to binary img
+		videotexbinpix[i] = binarize;
+		//(binarize << 24) | (binarize << 16)	| (binarize << 8) | binarize;							
+	}
+	
+	// 
+	videotexbin.update();	
+	if(presence>0){
+		presencef = (float)presence / numPixels;
+	} else {
+		presencef = 0.0f;
 	}
 	
 	
 	
-	// core binarize
-			
 	
-	if (om == STATIC_DIFFERENCE) {
+	if (om > STATIC_DIFFERENCE) {
 		
-		for (int i = 0; i < numPixels; i++) {
-//			int currColor = videoimgpix[i*3+1];
-			int currColor = videoimggraypix[i];
-			int bkgdColor = backgroundpix[i];
-						
-			diffVal = ABS(currColor - bkgdColor);
-//			diffValf = ABS(currentPixelsF[i] - backgroundPixelsF[i]);
-						
-			int binarize = 0;
-			if (diffVal >= videothresh) {
-				presence += 1;
-				binarize = 255;
-			}
-			
-			videotexbinpix[i] = binarize;
-//			(binarize << 24) | (binarize << 16)
-//			| (binarize << 8) | binarize;
-		}
-
-		videotexbin.update();		
-		videotex = &videotexbin;
 		
-		return videotexbin;
-		
-	} else if (om >= CONTINUOUS_DIFFERENCE) {
-		
-		for (int i = 0; i < numPixels; i++) {
-			int currColor = videoimggraypix[i];
-			int bkgdColor = backgroundpix[i];
-			
-			// currentValf = backgroundPixelsF[i];
-			// backgroundValf = backgroundPixelsF[i];
-			
-			currentVal = currColor;
-			backgroundVal = bkgdColor;
-			
-			diffVal = ABS(currentVal - backgroundVal);
-//			diffValf = ABS(currentPixelsF[i] - backgroundPixelsF[i]);
-//			differencePixelsF[i] = diffValf;
-			
-			int binarize = 0;
-			if (diffVal >= videothresh) {
-				presence += 1;
-				binarize = 255;
-			}
-			
-			videotexbinpix[i] = binarize;
-		}
-				
-		videotexbin.update();
-
 		// now update motion img and use that as base for tracking
 		
 		unsigned char * videotexmotionpix = videotexmotion.getPixels();
 		
 		for (int i = 0; i < numPixels; i++) {
-			
-			float valf = videotexmotionpix[i];
-			// int value = (videotexmotion.pixels[i] >> 8) & 0xff;
-			valf -= videofade; // minus fade
-			valf += videotexbinpix[i]; // (videotexbinpix[i] >> 8) & 0xff; // + binary
-			valf = valf < 0 ? 0 : valf > 255 ? 255 : valf;
-			int value = (int)(valf+0.5f);
-			videotexmotionpix[i] = value;
+			if(floatmode){
+				float valf = videotexmotionpix[i];
+				// int value = (videotexmotion.pixels[i] >> 8) & 0xff;
+				valf -= videofadef; // minus fade
+				valf += videotexbinpix[i]; // (videotexbinpix[i] >> 8) & 0xff; // + binary
+				valf = valf < 0 ? 0 : valf > 255 ? 255 : valf;
+				int value = (int)(valf+0.5f);
+				videotexmotionpix[i] = value;
+			} else {
+				int value = videotexmotionpix[i];
+				value -= videofade; // minus fade
+				value += videotexbinpix[i]; // + binary
+				value = value < 0 ? 0 : value > 255 ? 255 : value;
+				videotexmotionpix[i] = value;				
+			}
 			
 		}
 		
@@ -214,7 +267,14 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 		return videotexmotion;
 	}
 	
-	return videotexbin; // / just for return
+	if(bdoclear){
+		setBackground(videoimggray);
+		bdoclear = false;
+	}
+	videotex = &videotexbin;
+	return videotexbin;
+	
+	
 }
 
 
@@ -224,17 +284,21 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 void ofxFlob::setBackground (ofImage& img){
 	unsigned char * bgpix = backgroundPixels.getPixels();
 	unsigned char * imgpix = img.getPixels();
+	
 	for(int i=0; i<numPixels; i++){
 		bgpix[i] = imgpix[i];
 	}
 	backgroundPixels.update();
 	
 }
+
+
 void ofxFlob::easeBackground (ofImage& img){
 	unsigned char * bgpix = backgroundPixels.getPixels();
 	unsigned char * imgpix = img.getPixels();
+		
 	for(int i=0; i<numPixels; i++){
-		bgpix[i] += ( imgpix[i] - bgpix[i] ) * bglowpass;
+		bgpix[i] += (int)(((float)imgpix[i] - (float)bgpix[i] ) * continuous_ease);
 	}
 	backgroundPixels.update();
 	

@@ -44,7 +44,7 @@ void ImageBlobs::setup(ofxFlob *flob){
 }
 
 
-void ImageBlobs::calcdims(int w, int h, int ww, int wh) {
+void ImageBlobs::calcdims(const int w, const int h, const float ww, const float wh) {
 	this->w = w;
 	this->h = h;	
 	wr = 1.0f / w;
@@ -105,10 +105,12 @@ void ImageBlobs::calc(ofImage & image) {
 						if ((p2->x >= 0) && (p2->x < imgW)
 							&& (p2->y >= 0) && (p2->y < imgH)) {
 							
-							if (imagemap[p2->y * imgW + p2->x] == false) {								
-								int pixval2 = (pix[(int) (p2->y * imgW + p2->x)]);// & 0xFF;
+							int bloc = p2->y * imgW + p2->x;
+							
+							if (imagemap[bloc] == false) {										
+								int pixval2 = pix[bloc];
 								if (pixval2 > 0) {
-									imagemap[p2->y * imgW + p2->x] = true;
+									imagemap[bloc] = true;
 									pixelcount++;
 									
 									thecoords.push_back(new pt2(p2->x, p2->y + 1 ));

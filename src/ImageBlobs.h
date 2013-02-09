@@ -68,9 +68,9 @@ public:
 	void doremoveprevblobs();
 	void doaddnewtrackedblobs();
 	void sorttrackedblobs();
-	bool matchblobprevtrackedblobs(ABlob & ab) ;
+	bool matchblobprevtrackedblobs(ABlob * ab) ;
 	void compareblobsprevblobs();
-	void add_tracker_match(ABlob & b, trackedBlob &prev);
+	void add_tracker_match(ABlob * b, trackedBlob *prev);
 	bool isCollide(int x, int y);
 	
 	vector<float> postcollidetrackedblobs(float x, float y, float rad);

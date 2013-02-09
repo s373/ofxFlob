@@ -39,6 +39,12 @@
 
 class baseBlob {
 public:
+	baseBlob(){
+		id=0;
+		pixelcount=0;
+		boxminx= boxminy= boxmaxx= boxmaxy=0;
+		boxcenterx=boxcentery=0;
+	}
 	virtual ~baseBlob(){}; 
 	//polymorphy should include a base virtual destructor
 	

@@ -34,112 +34,117 @@ public:
 	// constructores
 	
 	~trackedBlob(){}
-	trackedBlob();
+	trackedBlob(){
+		ABlob::ABlob();
+		newblob=linked=false;
+		birthtime=lifetime=presencetime=pposx=pposy=pcx=pcy=velx=vely=prevelx=prevely=rad=rad2=0;
+		maxdist2=2555.f;
+	}
 	
-	trackedBlob (const trackedBlob & b) {
+	trackedBlob (const trackedBlob * b) {
 	
-		newblob = b.newblob;
-		birthtime = b.birthtime;
-		presencetime = b.presencetime;
+		newblob = b->newblob;
+		birthtime = b->birthtime;
+		presencetime = b->presencetime;
 		
-		pposx= b.pposx; pposy=b.pposy;
-		pcx = b.pcx; pcy = b.pcy;
+		pposx= b->pposx; pposy=b->pposy;
+		pcx = b->pcx; pcy = b->pcy;
 		
-		velx = b.velx; vely = b.vely;
-		prevelx = b.prevelx; prevely = b.prevely;
-		maxdist2=b.maxdist2;
-		rad=b.rad;
-		rad2=b.rad2;
-		linked=b.linked;
+		velx = b->velx; vely = b->vely;
+		prevelx = b->prevelx; prevely = b->prevely;
+		maxdist2=b->maxdist2;
+		rad=b->rad;
+		rad2=b->rad2;
+		linked=b->linked;
 		
-		armleftx = b.armleftx;
-		armlefty = b.armlefty;
-		armrightx = b.armrightx;
-		armrighty = b.armrighty;
-		headx = b.headx;
-		heady = b.heady;
-		bottomx = b.bottomx;
-		bottomy = b.bottomy;
-		footleftx = b.footleftx;
-		footlefty = b.footlefty;
-		footrightx = b.footrightx;
-		footrighty = b.footrighty;
-	
+		armleftx = b->armleftx;
+		armlefty = b->armlefty;
+		armrightx = b->armrightx;
+		armrighty = b->armrighty;
+		headx = b->headx;
+		heady = b->heady;
+		bottomx = b->bottomx;
+		bottomy = b->bottomy;
+		footleftx = b->footleftx;
+		footlefty = b->footlefty;
+		footrightx = b->footrightx;
+		footrighty = b->footrighty;
+		
 	}
 	
 	
-	trackedBlob (const ABlob &a ,const trackedBlob & b) {
+	trackedBlob (const ABlob *a ,const trackedBlob * b) {
 		//super(a);
-		id = b.id;
-		pixelcount = b.pixelcount;
-		boxminx = b.boxminx;    boxminy = b.boxminy;    boxmaxx = b.boxmaxx;    boxmaxy = b.boxmaxy;
-		boxcenterx = b.boxcenterx;    boxcentery = b.boxcentery;
-		boxdimx = b.boxdimx;    boxdimy = b.boxdimy;
-		pboxcenterx = b.pboxcenterx;    pboxcentery = b.pboxcentery;
-		cx = b.cx; cy = b.cy;
-		//   pcx = b.pcx; pcy = b.pcy;
-		dimx = b.dimx; dimy = b.dimy;
+		id = b->id;
+		pixelcount = b->pixelcount;
+		boxminx = b->boxminx;    boxminy = b->boxminy;    boxmaxx = b->boxmaxx;    boxmaxy = b->boxmaxy;
+		boxcenterx = b->boxcenterx;    boxcentery = b->boxcentery;
+		boxdimx = b->boxdimx;    boxdimy = b->boxdimy;
+		pboxcenterx = b->pboxcenterx;    pboxcentery = b->pboxcentery;
+		cx = b->cx; cy = b->cy;
+		//   pcx = b->pcx; pcy = b->pcy;
+		dimx = b->dimx; dimy = b->dimy;
 		
 		//this(b);
 		
-		newblob = b.newblob;
-		birthtime = b.birthtime;
-		presencetime = b.presencetime;
+		newblob = b->newblob;
+		birthtime = b->birthtime;
+		presencetime = b->presencetime;
 		
-		pposx= b.pposx; pposy=b.pposy;
-		pcx = b.pcx; pcy = b.pcy;
+		pposx= b->pposx; pposy=b->pposy;
+		pcx = b->pcx; pcy = b->pcy;
 		
-		velx = b.velx; vely = b.vely;
-		prevelx = b.prevelx; prevely = b.prevely;
-		maxdist2=b.maxdist2;
-		rad=b.rad;
-		rad2=b.rad2;
-		linked=b.linked;
+		velx = b->velx; vely = b->vely;
+		prevelx = b->prevelx; prevely = b->prevely;
+		maxdist2=b->maxdist2;
+		rad=b->rad;
+		rad2=b->rad2;
+		linked=b->linked;
 		
 		
-		armleftx = a.armleftx;
-		armlefty = a.armlefty;
-		armrightx = a.armrightx;
-		armrighty = a.armrighty;
-		headx = a.headx;
-		heady = a.heady;
-		bottomx = a.bottomx;
-		bottomy = a.bottomy;
-		footleftx = a.footleftx;
-		footlefty = a.footlefty;
-		footrightx = a.footrightx;
-		footrighty = a.footrighty;
+		armleftx = a->armleftx;
+		armlefty = a->armlefty;
+		armrightx = a->armrightx;
+		armrighty = a->armrighty;
+		headx = a->headx;
+		heady = a->heady;
+		bottomx = a->bottomx;
+		bottomy = a->bottomy;
+		footleftx = a->footleftx;
+		footlefty = a->footlefty;
+		footrightx = a->footrightx;
+		footrighty = a->footrighty;
 		
 		
 	}
 	
 	
-	trackedBlob (const ABlob &b) {
+	trackedBlob (const ABlob *b) {
 		//super(b);
 		//ABlob::ABlob(b);		
-		id = b.id;
-		pixelcount = b.pixelcount;
-		boxminx = b.boxminx;    boxminy = b.boxminy;    boxmaxx = b.boxmaxx;    boxmaxy = b.boxmaxy;
-		boxcenterx = b.boxcenterx;    boxcentery = b.boxcentery;
-		boxdimx = b.boxdimx;    boxdimy = b.boxdimy;
-		pboxcenterx = b.pboxcenterx;    pboxcentery = b.pboxcentery;
-		cx = b.cx; cy = b.cy;
+		id = b->id;
+		pixelcount = b->pixelcount;
+		boxminx = b->boxminx;    boxminy = b->boxminy;    boxmaxx = b->boxmaxx;    boxmaxy = b->boxmaxy;
+		boxcenterx = b->boxcenterx;    boxcentery = b->boxcentery;
+		boxdimx = b->boxdimx;    boxdimy = b->boxdimy;
+		pboxcenterx = b->pboxcenterx;    pboxcentery = b->pboxcentery;
+		cx = b->cx; cy = b->cy;
 		
-		dimx = b.dimx; dimy = b.dimy;
+		dimx = b->dimx; dimy = b->dimy;
 		
-		armleftx = b.armleftx;
-		armlefty = b.armlefty;
-		armrightx = b.armrightx;
-		armrighty = b.armrighty;
-		headx = b.headx;
-		heady = b.heady;
-		bottomx = b.bottomx;
-		bottomy = b.bottomy;
-		heady = b.heady;
-		footleftx = b.footleftx;
-		footlefty = b.footlefty;
-		footrightx = b.footrightx;
-		footrighty = b.footrighty;						
+		armleftx = b->armleftx;
+		armlefty = b->armlefty;
+		armrightx = b->armrightx;
+		armrighty = b->armrighty;
+		headx = b->headx;
+		heady = b->heady;
+		bottomx = b->bottomx;
+		bottomy = b->bottomy;
+		heady = b->heady;
+		footleftx = b->footleftx;
+		footlefty = b->footlefty;
+		footrightx = b->footrightx;
+		footrighty = b->footrighty;						
 		
 		calcrad();
 		

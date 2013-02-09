@@ -374,8 +374,8 @@ vector<trackedBlob*>* ImageBlobs:: calcsimple() {
 	
 	for (int i = 0; i < theblobs.size(); i++) {
 		ab = theblobs.at(i);
-		b1 = new trackedBlob(*ab);
-		b2 = (i >= prevblobs.size()) ? NULL : new trackedBlob(*prevblobs.at(i));
+		b1 = new trackedBlob(ab);
+		b2 = (i >= prevblobs.size()) ? NULL : new trackedBlob(prevblobs.at(i));
 		if (b2 != NULL) {
 			
 			b1->id = b2->id; // b2maintains id!
@@ -493,8 +493,8 @@ vector<trackedBlob*>* ImageBlobs:: tracksimple() {
 	
 	for (int i = 0; i < theblobs.size(); i++) {
 		ab = theblobs.at(i);
-		b1 = new trackedBlob(*ab);
-		b2 = (i >= prevnumblobs) ? NULL : new trackedBlob(*prevtrackedblobs.at(i));
+		b1 = new trackedBlob(ab);
+		b2 = (i >= prevnumblobs) ? NULL : new trackedBlob(prevtrackedblobs.at(i));
 		if (b2 != NULL) {
 			b1->id = b2->id;
 			b1->prevelx = b2->velx;
@@ -613,9 +613,9 @@ void ImageBlobs:: sorttrackedblobs() {
 			int minid2 = (int) 2e63 - 1;
 			int who = -1;
 			for (int j = 0; j < trackedblobs.size(); j++) {
-				trackedBlob &tb = *(trackedblobs.at(i));
-				if (tb.id < minid2) {
-					minid2 = tb.id;
+				trackedBlob *tb = (trackedblobs.at(i));
+				if (tb->id < minid2) {
+					minid2 = tb->id;
 					who = j;
 				}
 			}
@@ -638,7 +638,7 @@ void ImageBlobs:: sorttrackedblobs() {
 	
 }
 
-bool ImageBlobs:: matchblobprevtrackedblobs(ABlob & ab) {
+bool ImageBlobs:: matchblobprevtrackedblobs(ABlob * ab) {
 	
 	bool matched = false;
 	float mintrackeddist = 10000;
@@ -649,12 +649,12 @@ bool ImageBlobs:: matchblobprevtrackedblobs(ABlob & ab) {
 	
 	for (int i = (prevtrackedblobs.size() - 1); i >= 0; i--) {
 		
-		trackedBlob & prev = *( prevtrackedblobs.at(i));
-		if (prev.linked)
+		trackedBlob * prev = ( prevtrackedblobs.at(i));
+		if (prev->linked)
 			continue;
 		
-		float dx = ab.cx - prev.cx;
-		float dy = ab.cy - prev.cy;
+		float dx = ab->cx - prev->cx;
+		float dy = ab->cy - prev->cy;
 		float d2 = dx * dx + dy * dy;
 		if (d2 < mindist && d2 < mintrackeddist) {
 			mintrackeddist = d2;
@@ -667,52 +667,52 @@ bool ImageBlobs:: matchblobprevtrackedblobs(ABlob & ab) {
 	
 	if (matched) {
 		// System.out.print("matched blob "+who+ "\n");
-		trackedBlob & b = *( prevtrackedblobs.at(who));//remove(who);
+		trackedBlob * b = ( prevtrackedblobs.at(who));//remove(who);
 		//delete reference, not object
 		prevtrackedblobs.erase(prevtrackedblobs.begin()+who);
 		
-		b.linked = true;
-		b.newblob = false;
-		b.presencetime++;
-		b.prevelx = b.velx;
-		b.prevely = b.vely;
-		b.pcx = b.cx;
-		b.pcy = b.cy;
-		b.cx = ab.cx;
-		b.cy = ab.cy;
-		b.velx = lp2 * b.prevelx + lp1 * (b.cx - b.pcx);// vx;//b.cx -
-		// b.pcx;
-		b.vely = lp2 * b.prevely + lp1 * (b.cy - b.pcy);// vy;//b.cy -
-		// b.pcy;
+		b->linked = true;
+		b->newblob = false;
+		b->presencetime++;
+		b->prevelx = b->velx;
+		b->prevely = b->vely;
+		b->pcx = b->cx;
+		b->pcy = b->cy;
+		b->cx = ab->cx;
+		b->cy = ab->cy;
+		b->velx = lp2 * b->prevelx + lp1 * (b->cx - b->pcx);// vx;//b->cx -
+		// b->pcx;
+		b->vely = lp2 * b->prevely + lp1 * (b->cy - b->pcy);// vy;//b->cy -
+		// b->pcy;
 		// box
-		b.boxminx = ab.boxminx;
-		b.boxmaxx = ab.boxmaxx;
-		b.boxminy = ab.boxminy;
-		b.boxmaxy = ab.boxmaxy;
-		b.boxdimx = ab.boxdimx;
-		b.boxdimy = ab.boxdimy;
-		b.dimx = ab.dimx;
-		b.dimy = ab.dimy;
+		b->boxminx = ab->boxminx;
+		b->boxmaxx = ab->boxmaxx;
+		b->boxminy = ab->boxminy;
+		b->boxmaxy = ab->boxmaxy;
+		b->boxdimx = ab->boxdimx;
+		b->boxdimy = ab->boxdimy;
+		b->dimx = ab->dimx;
+		b->dimy = ab->dimy;
 		
-		b.rad = (ab.boxdimx < ab.boxdimy) ? ab.boxdimx / 2.f
-		: ab.boxdimy / 2.f;
-		b.rad2 = b.rad * b.rad;
+		b->rad = (ab->boxdimx < ab->boxdimy) ? ab->boxdimx / 2.f
+		: ab->boxdimy / 2.f;
+		b->rad2 = b->rad * b->rad;
 		
 		// cp feats
-		b.armleftx = ab.armleftx;
-		b.armlefty = ab.armlefty;
-		b.armrightx = ab.armrightx;
-		b.armrighty = ab.armrighty;
-		b.headx = ab.headx;
-		b.heady = ab.heady;
-		b.bottomx = ab.bottomx;
-		b.bottomy = ab.bottomy;
-		b.footleftx = ab.footleftx;
-		b.footlefty = ab.footlefty;
-		b.footrightx = ab.footrightx;
-		b.footrighty = ab.footrighty;
+		b->armleftx = ab->armleftx;
+		b->armlefty = ab->armlefty;
+		b->armrightx = ab->armrightx;
+		b->armrighty = ab->armrighty;
+		b->headx = ab->headx;
+		b->heady = ab->heady;
+		b->bottomx = ab->bottomx;
+		b->bottomy = ab->bottomy;
+		b->footleftx = ab->footleftx;
+		b->footlefty = ab->footlefty;
+		b->footrightx = ab->footrightx;
+		b->footrighty = ab->footrighty;
 		
-		trackedblobs.push_back(&b);
+		trackedblobs.push_back(b);
 		
 	}
 	
@@ -723,7 +723,7 @@ void ImageBlobs::compareblobsprevblobs() {
 	
 	for (int i = 0; i < theblobs.size(); i++) {
 		
-		ABlob & ab = *(theblobs.at(i));
+		ABlob * ab = (theblobs.at(i));
 		bool matched = matchblobprevtrackedblobs(ab);
 		
 		if (!matched)
@@ -772,16 +772,16 @@ void ImageBlobs::doaddnewtrackedblobs() {
 	}
 }
 
-void ImageBlobs::add_tracker_match(ABlob & b, trackedBlob &prev) {
+void ImageBlobs::add_tracker_match(ABlob * b, trackedBlob *prev) {
 	
 	//
 	trackedBlob * tb = new trackedBlob(b, prev);
-	tb->prevelx = prev.velx;
-	tb->prevely = prev.vely;
-	tb->pcx = prev.cx;
-	tb->pcy = prev.cy;
-	tb->velx = tb->cx - prev.cx;
-	tb->vely = tb->cy - prev.cy;
+	tb->prevelx = prev->velx;
+	tb->prevely = prev->vely;
+	tb->pcx = prev->cx;
+	tb->pcy = prev->cy;
+	tb->velx = tb->cx - prev->cx;
+	tb->vely = tb->cy - prev->cy;
 	tb->presencetime++;
 	
 	/*

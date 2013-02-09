@@ -58,33 +58,38 @@ public:
 			footleftx,footlefty,
 			footrightx,footrighty;
 	
-	ABlob(){;} 
+	ABlob() { 
+		baseBlob::baseBlob();
+		boxdimx=0,boxdimy=0,pboxcenterx=0,pboxcentery=0,cx=0,cy=0,bx=0,by=0,
+		dimx=0,dimy=0,armleftx=0,armlefty=0,armrightx=0,armrighty=0,
+		headx=0,heady=0,bottomx=0,bottomy=0,footleftx=0,footlefty, footrightx=0,footrighty=0 ;
+	} 
 	~ABlob(){;}
-	ABlob(const ABlob & b){
-		id = b.id;
-		pixelcount = b.pixelcount;
-		boxminx = b.boxminx;    boxminy = b.boxminy;    boxmaxx = b.boxmaxx;    boxmaxy = b.boxmaxy;
-		boxcenterx = b.boxcenterx;    boxcentery = b.boxcentery;
-		boxdimx = b.boxdimx;    boxdimy = b.boxdimy;
-		pboxcenterx = b.pboxcenterx;    pboxcentery = b.pboxcentery;
-		cx = b.cx; cy = b.cy;
-		bx = b.bx; by = b.by;
-
-		dimx = b.dimx; dimy = b.dimy;
+	ABlob(const ABlob * b){
+		id = b->id;
+		pixelcount = b->pixelcount;
+		boxminx = b->boxminx;    boxminy = b->boxminy;    boxmaxx = b->boxmaxx;    boxmaxy = b->boxmaxy;
+		boxcenterx = b->boxcenterx;    boxcentery = b->boxcentery;
+		boxdimx = b->boxdimx;    boxdimy = b->boxdimy;
+		pboxcenterx = b->pboxcenterx;    pboxcentery = b->pboxcentery;
+		cx = b->cx; cy = b->cy;
+		bx = b->bx; by = b->by;
 		
-		armleftx = b.armleftx;
-		armlefty = b.armlefty;
-		armrightx = b.armrightx;
-		armrighty = b.armrighty;
-		headx = b.headx;
-		heady = b.heady;
-		bottomx = b.bottomx;
-		bottomy = b.bottomy;
-		heady = b.heady;
-		footleftx = b.footleftx;
-		footlefty = b.footlefty;
-		footrightx = b.footrightx;
-		footrighty = b.footrighty;						
+		dimx = b->dimx; dimy = b->dimy;
+		
+		armleftx = b->armleftx;
+		armlefty = b->armlefty;
+		armrightx = b->armrightx;
+		armrighty = b->armrighty;
+		headx = b->headx;
+		heady = b->heady;
+		bottomx = b->bottomx;
+		bottomy = b->bottomy;
+		heady = b->heady;
+		footleftx = b->footleftx;
+		footlefty = b->footlefty;
+		footrightx = b->footrightx;
+		footrighty = b->footrighty;						
 		
 	}
 	

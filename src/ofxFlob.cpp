@@ -9,6 +9,8 @@
 
 #include "ofxFlob.h"
 
+unsigned int	ofxFlob::TBlobLifeTime = 10;
+unsigned int	ofxFlob::TBlobMaxDistSquared = 2555.f;
 
 
 ofxFlob::~ofxFlob() {}
@@ -30,10 +32,14 @@ ofxFlob::ofxFlob() {
 	colormode = GREEN;	
 	thresholdmode = ABSDIF;
 	continuous_ease = 0.10f;	
-	trackedBlobLifeTime = 100;	
+
 	floatmode = true;
 	floatsmooth = 0.555f;
 	bdoclear = true;
+	TBlobDoSorting = false;
+	clampGray = false;
+	nearGray = 0;
+	farGray = 255;
 }
 
 
@@ -54,6 +60,19 @@ void ofxFlob::setup(const int srcW,const int srcH, const float dstW, const float
 	currentLuma.assign(numPixels,0.0f);
 	imageblobs.setup(this);	
 }
+
+
+
+ofxFlob* ofxFlob::setTBlobLifeTime(const float e){
+	ofxFlob::TBlobLifeTime = e;
+	return this;
+}
+ofxFlob* ofxFlob::setTBlobMaxDistSquared(const float e){
+	ofxFlob::TBlobMaxDistSquared = e;
+	return this;
+}
+
+
 
 
 
@@ -156,6 +175,11 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 	for(int i=0; i<numPixels;i++){
 		 currentVal = videoimggraypix[i];
 		 backgroundVal = backgroundpix[i];
+		
+		if(clampGray){
+			currentVal = currentVal < nearGray ? nearGray : currentVal > farGray ? farGray : currentVal; 
+			backgroundVal = backgroundVal < nearGray ? nearGray : backgroundVal > farGray ? farGray : backgroundVal; 			
+		}
 		
 		int binarize = 0;
 		
@@ -312,19 +336,19 @@ vector<ABlob*>* ofxFlob::calc (ofImage& bin){
 	return &imageblobs.theblobs;
 }
 
-vector<trackedBlob*>*  ofxFlob::calcsimple( ofImage & bin ){
+vector<TBlob*>*  ofxFlob::calcsimple( ofImage & bin ){
 	imageblobs.calc(bin);
 	return imageblobs.calcsimple();
 
 }
 
-vector<trackedBlob*>*  ofxFlob::track( ofImage & bin ){
+vector<TBlob*>*  ofxFlob::track( ofImage & bin ){
 	imageblobs.calc(bin);
 	imageblobs.dotracking();
-	return &imageblobs.trackedblobs;
+	return &imageblobs.TBlobs;
 }
 
-vector<trackedBlob*>*  ofxFlob::tracksimple( ofImage & bin ){
+vector<TBlob*>*  ofxFlob::tracksimple( ofImage & bin ){
 	imageblobs.calc(bin);
 	return imageblobs.tracksimple();
 

@@ -27,11 +27,6 @@
  * Public License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
- * 
- * @author      Andre Sier 
- * @modified    20130208
- * @version     0.2.2y (22)
- * @url			http://s373.net/code/flob
  */
 
 #pragma once
@@ -42,13 +37,14 @@
 class ABlob : public baseBlob {
 public:
 	
-	 int boxdimx,boxdimy;
-	 int pboxcenterx,pboxcentery;
+	int boxdimx,boxdimy;
+	int pboxcenterx,pboxcentery;
+	int ivelx, ively;
 	 // normalized to desired output coords vals
-	 float cx, cy;
-	 float bx, by; //beginx beginy
-	//  float pcx,pcy;
-	 float dimx, dimy;
+	float cx, cy;
+	float bx, by;
+	float dimx, dimy;
+	
 	
 	///features:
 	 float armleftx,armlefty,
@@ -60,7 +56,7 @@ public:
 	
 	ABlob() { 
 		baseBlob::baseBlob();
-		boxdimx=0,boxdimy=0,pboxcenterx=0,pboxcentery=0,cx=0,cy=0,bx=0,by=0,
+		boxdimx=0,boxdimy=0,pboxcenterx=-1,pboxcentery=-1,ivelx=0,ively=0,cx=0,cy=0,bx=0,by=0,
 		dimx=0,dimy=0,armleftx=0,armlefty=0,armrightx=0,armrighty=0,
 		headx=0,heady=0,bottomx=0,bottomy=0,footleftx=0,footlefty, footrightx=0,footrighty=0 ;
 	} 
@@ -68,10 +64,22 @@ public:
 	ABlob(const ABlob * b){
 		id = b->id;
 		pixelcount = b->pixelcount;
-		boxminx = b->boxminx;    boxminy = b->boxminy;    boxmaxx = b->boxmaxx;    boxmaxy = b->boxmaxy;
-		boxcenterx = b->boxcenterx;    boxcentery = b->boxcentery;
-		boxdimx = b->boxdimx;    boxdimy = b->boxdimy;
-		pboxcenterx = b->pboxcenterx;    pboxcentery = b->pboxcentery;
+		boxminx = b->boxminx;    
+		boxminy = b->boxminy;    
+		boxmaxx = b->boxmaxx;    
+		boxmaxy = b->boxmaxy;
+		boxcenterx = b->boxcenterx;    
+		boxcentery = b->boxcentery;
+		boxdimx = b->boxdimx;    
+		boxdimy = b->boxdimy;
+		if(b->pboxcenterx==-1){
+			pboxcenterx = boxcenterx;    pboxcentery = boxcentery;
+		} else {
+			pboxcenterx = b->pboxcenterx;    pboxcentery = b->pboxcentery;
+		}
+		ivelx = boxcenterx - pboxcenterx;
+		ively = boxcentery - pboxcentery;
+		
 		cx = b->cx; cy = b->cy;
 		bx = b->bx; by = b->by;
 		
@@ -85,7 +93,6 @@ public:
 		heady = b->heady;
 		bottomx = b->bottomx;
 		bottomy = b->bottomy;
-		heady = b->heady;
 		footleftx = b->footleftx;
 		footlefty = b->footlefty;
 		footrightx = b->footrightx;

@@ -1,12 +1,11 @@
 /*
- *  baseBlob.h
- *  example-helloflob
+ *  trackedBlob.h
+ *  ofxflob test
  *
- *  Created by andré sier on 20130208.
- *  Copyright 2013 __MyCompanyName__. All rights reserved.
+ *  Created by andre sier on 29/3/10.
+ *  Copyright 2010 s373.net/x. All rights reserved.
  *
  */
-
 /**
  * Flob
  * Fast multi-blob detector and simple skeleton tracker using flood-fill algorithms.
@@ -29,24 +28,46 @@
  * Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA  02111-1307  USA
  */
-
 #pragma once
 
-class baseBlob {
+#include "ofMain.h" 
+#include "ABlob.h"
+
+class ImageBlobs; class ofxFlob;
+class TBlob : public ABlob {
 public:
-	baseBlob(){
-		id=0;
-		pixelcount=0;
-		boxminx= boxminy= boxmaxx= boxmaxy=0;
-		boxcenterx=boxcentery=0;
-	}
-	virtual ~baseBlob(){}; 
-	//polymorphy should include a base virtual destructor
+	 bool newblob;
+	 long birthtime;
+	 long lifetime;	
+	 int presencetime;
 	
-	int id;
-	int pixelcount;
-	int boxminx, boxminy, boxmaxx, boxmaxy;
-	int boxcenterx, boxcentery;
+	 bool linked;
+	
+	 int pboxcenterx,pboxcentery;
+	 float pcx,pcy;
+	
+	 float velx,vely;
+	 float prevelx,prevely;
+	 float maxdist2;
+	 float rad,rad2;
+	
+	
+	// constructores
+	
+	~TBlob(){}
+	TBlob(){
+		ABlob::ABlob();
+		newblob=linked=false;
+		birthtime=lifetime=presencetime=pcx=pcy=velx=vely=prevelx=prevely=rad=rad2=0;
+		maxdist2=2555.f;
+	}
+	
+	TBlob (const ABlob * b);
+	
+	void calcrad(){
+		rad = (boxdimx<boxdimy)?boxdimx/2.f:boxdimy/2.f;
+		rad2 = rad*rad;
+	}
 	
 	
 };

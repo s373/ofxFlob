@@ -30,8 +30,8 @@
  * Boston, MA  02111-1307  USA
  * 
  * @author      Andre Sier 
- * @modified    20130208
- * @version     0.2.2y (22)
+ * @modified    20130215
+ * @version     0.2.4a (24)
  * @url			http://s373.net/code/flob
  */
 
@@ -85,13 +85,16 @@ public:
 	
 	float						continuous_ease;
 	
-	int							trackedBlobLifeTime,
-								trackedBlobMaxDistSquared;
+	static unsigned int	TBlobLifeTime,
+						TBlobMaxDistSquared;
+	int							nearGray, farGray;
 	
 	string						version;
 	
 	
-	bool					bdoclear;
+	bool					bdoclear,
+							TBlobDoSorting,
+							clampGray;
 	
 	
 	//// 
@@ -105,13 +108,19 @@ public:
 	
 	ofImage & binarize (unsigned char * pix, int width, int height);
 	
-	vector<ABlob*>*			calc( ofImage & bin ); 
-	vector<trackedBlob*>*	calcsimple( ofImage & bin ); 
-	vector<trackedBlob*>*	track( ofImage & bin ); 
-	vector<trackedBlob*>*	tracksimple( ofImage & bin ); 
+	vector<ABlob*>*	calc( ofImage & bin ); 
+	vector<TBlob*>*	calcsimple( ofImage & bin ); 
+	vector<TBlob*>*	track( ofImage & bin ); 
+	vector<TBlob*>*	tracksimple( ofImage & bin ); 
 	
 	float getPresencef(){
 		return presencef;
+	}
+	int getNumBlobs(){
+		return imageblobs.theblobs.size();
+	}
+	int getNumTBlobs(){
+		return imageblobs.TBlobs.size();
 	}
 	
 	
@@ -184,7 +193,26 @@ public:
 		continuous_ease = e;
 		return this;
 	}
-
+	ofxFlob* setTBlobLifeTime(const float e);
+	ofxFlob* setTBlobMaxDistSquared(const float e);
+	
+	ofxFlob* setClampGray(const bool b){
+		clampGray = b;
+		return this;
+	}
+	ofxFlob* setTBlobDoSorting(const bool b){
+		TBlobDoSorting = b;
+		return this;
+	}
+	ofxFlob* setNearGray(const int n){
+		nearGray = n;
+		return this;
+	}
+	ofxFlob* setFarGray(const int n){
+		farGray = n;
+		return this;
+	}
+	
 	
 	const float getThresh()		{ return videothreshf ; }
 	const float getFade()		{ return videofadef ; }
@@ -199,6 +227,12 @@ public:
 	const int getMinNumPixels()	{ return imageblobs.ninpix; }
 	const int getMaxNumPixels()	{ return imageblobs.maxpix; }
 	const float getContinuousEase() { return continuous_ease; }
+	const float getTBlobLifeTime() { return TBlobLifeTime; }
+	const float getTBlobMaxDistSquared() { return TBlobMaxDistSquared; }
+	const bool getClampGray()	{ return clampGray; }
+	const bool getTBlobDoSorting()	{ return TBlobDoSorting; }
+	const int getNearGray()	{ return nearGray; }
+	const int getFarGray()	{ return farGray; }
 
 	
 	

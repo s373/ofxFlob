@@ -13,7 +13,7 @@
 #include "ofMain.h" 
 #include "baseBlob.h"
 #include "ABlob.h"
-#include "trackedBlob.h"
+#include "TBlob.h"
 #include "quadBlob.h"
 #include "pt2.h"
 
@@ -21,7 +21,7 @@ class ofxFlob; // fwddecl
 
 class ImageBlobs {
 public:		
-	int					idnumbers;
+	static unsigned int	idnumbers;
 	int					numblobs, prevnumblobs;
 	int					trackednumblobs, prevtrackednumblobs;
 	int					lifetime;
@@ -39,9 +39,8 @@ public:
 	
 	vector				<ABlob *>				theblobs;
 	vector				<ABlob *>				prevblobs;
-	vector				<trackedBlob *>			trackedblobs;
-	vector				<trackedBlob *>			prevtrackedblobs;
-	vector				<trackedBlob *>			tbsimplelist;
+	vector				<TBlob *>				TBlobs;
+	vector				<TBlob *>				prevTBlobs;
 	vector				<quadBlob *>			quadbloblist;
 	vector				<pt2 *>					thecoords;
 
@@ -59,21 +58,17 @@ public:
 	void calcQuad(ofImage & image);
 	void copy_blobs_to_previousblobs();
 
-	vector<trackedBlob*>* calcsimple();
-	vector<trackedBlob*>* tracksimple();
+	vector<TBlob*>* calcsimple();
+	vector<TBlob*>* tracksimple();
 	
-	void addTrackedBlob(trackedBlob * b);
-	void addNewBlob(trackedBlob * b);
 	void dotracking();
 	void doremoveprevblobs();
-	void doaddnewtrackedblobs();
-	void sorttrackedblobs();
-	bool matchblobprevtrackedblobs(ABlob * ab) ;
+	void sortTBlobs();
+	bool matchblobprevTBlobs(ABlob * ab) ;
 	void compareblobsprevblobs();
-	void add_tracker_match(ABlob * b, trackedBlob *prev);
 	bool isCollide(int x, int y);
 	
-	vector<float> postcollidetrackedblobs(float x, float y, float rad);
+	vector<float> postcollideTBlobs(float x, float y, float rad);
 	vector<float> postcollideblobs(float x, float y, float rad);
 	
 	

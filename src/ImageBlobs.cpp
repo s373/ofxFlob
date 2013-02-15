@@ -188,8 +188,8 @@ void ImageBlobs::calc(ofImage & image) {
 								ABlob *c = prevblobs[numblobs];
 								b->pboxcenterx = c->boxcenterx;
 								b->pboxcentery = c->boxcentery;
-//								b->ivelx = (b->boxcenterx-b->pboxcenterx) * wr;
-//								b->ively = (b->boxcentery-b->pboxcentery) * hr;
+								b->ivelx = (b->boxcenterx-b->pboxcenterx) ;
+								b->ively = (b->boxcentery-b->pboxcentery) ;
 							}
 						}
 
@@ -200,10 +200,10 @@ void ImageBlobs::calc(ofImage & image) {
 							if (tflob->trackfeatures[3])	b = calc_feature_bottom(b);
 						}
 						
-						ABlob *blob = new ABlob(b);
-						theblobs.push_back(blob);
+//						ABlob *blob = new ABlob(b);
+						theblobs.push_back(b);//lob);
 						numblobs++;
-						delete b;
+//						delete b;
 					} else {
 						delete b;
 					}

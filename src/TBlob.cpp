@@ -18,7 +18,8 @@ TBlob::TBlob (const ABlob * b) {
 	
 	TBlob::TBlob();	
 	
-	id = ImageBlobs::idnumbers++;
+//	id = ImageBlobs::idnumbers++;
+	id = ImageBlobs::idnumbers;
 	pixelcount = b->pixelcount;	
 	boxminx = b->boxminx;
 	boxminy = b->boxminy;

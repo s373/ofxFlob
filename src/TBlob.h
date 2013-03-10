@@ -37,13 +37,13 @@ class ImageBlobs; class ofxFlob;
 class TBlob : public ABlob {
 public:
 	 bool newblob;
-	 long birthtime;
-	 long lifetime;	
-	 int presencetime;
+	 unsigned long birthtime;
+	 unsigned long lifetime;	
+	 unsigned int presencetime;
 	
 	 bool linked;
 	
-	 int pboxcenterx,pboxcentery;
+	 unsigned int pboxcenterx,pboxcentery;
 	 float pcx,pcy;
 	
 	 float velx,vely;

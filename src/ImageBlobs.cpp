@@ -98,11 +98,11 @@ void ImageBlobs::calc(ofImage & image) {
 	int min0 = 1000000;
 	int max0 = -100000;
 	
-	int pixelcount = 0;
+	unsigned int pixelcount = 0;	
 
 	copy_blobs_to_previousblobs();
 	
-	int pblobssize = prevblobs.size();
+//	int pblobssize = prevblobs.size();
 	
 	thecoords.clear();
 	imagemap.assign( numpix, false );
@@ -135,8 +135,8 @@ void ImageBlobs::calc(ofImage & image) {
 					
 					while (thecoords.size()>0) {						
 						pt2 *p2 = new pt2(thecoords[0]->x, thecoords[0]->y);
-						delete thecoords[0]; //
-						thecoords.erase(thecoords.begin()); //
+						delete thecoords[0]; //   
+						thecoords.erase(thecoords.begin()); //  
 
 						if ((p2->x >= 0) && (p2->x < imgW)
 							&& (p2->y >= 0) && (p2->y < imgH)) {
@@ -184,7 +184,7 @@ void ImageBlobs::calc(ofImage & image) {
 						b->dimx = b->boxdimx * wcoordsx;
 						b->dimy = b->boxdimy * wcoordsy;
 						{// glitchy vel calcs
-							if(pblobssize>numblobs){
+							if(prevnumblobs>numblobs){
 								ABlob *c = prevblobs[numblobs];
 								b->pboxcenterx = c->boxcenterx;
 								b->pboxcentery = c->boxcentery;
@@ -330,11 +330,11 @@ void ImageBlobs::copy_blobs_to_previousblobs(){
 	prevnumblobs = numblobs;
 	numblobs = 0; // reset count per frame at begin
 	
-	if(prevblobs.size()>0){
-	while(prevblobs.size()>0){
-		delete prevblobs[0];
-		prevblobs.erase( prevblobs.begin() );
-	}
+	if(prevblobs.size()>0){	
+		while(prevblobs.size()>0){
+			delete prevblobs[0];
+			prevblobs.erase( prevblobs.begin() );
+		}
 
 		prevblobs.clear();
 	}
@@ -427,21 +427,16 @@ vector<TBlob*>* ImageBlobs:: calcsimple() {
 		b1->boxcenterx = ab->boxcenterx;
 		b1->boxcentery = ab->boxcentery;
 		
-		b1->velx += lp2 * b1->velx + lp1 * (b1->boxcenterx - b1->pboxcenterx)
-		* wr;// vx;//b->cx - b->pcx;
-		b1->vely = lp2 * b1->vely + lp1 * (b1->boxcentery - b1->pboxcentery)
-		* hr;// vy;//b->cy - b->pcy;
+		b1->velx = lp2 * b1->prevelx + lp1 * (b1->cx - b1->pcx);
+		b1->vely = lp2 * b1->prevely + lp1 * (b1->cy - b1->pcy);		
+		
 		
 		// // old smooth
 		// b1.velx = lp2 * b1.velx + lp1 * (b1.boxcenterx - b1.pboxcenterx)
 		// * wr;// vx;//b.cx - b.pcx;
 		// b1.vely = lp2 * b1.vely + lp1 * (b1.boxcentery - b1.pboxcentery)
 		// * hr;// vy;//b.cy - b.pcy;
-		
-		// b1.velx = lp2*b1.prevelx + lp1*(b1.cx - b1.pcx);//vx;//b.cx -
-		// b.pcx;
-		// b1.vely = lp2*b1.prevely + lp1*(b1.cy - b1.pcy);//vy;//b.cy -
-		// b.pcy;
+
 		b1->boxminx = ab->boxminx;
 		b1->boxmaxx = ab->boxmaxx;
 		b1->boxminy = ab->boxminy;
@@ -457,6 +452,11 @@ vector<TBlob*>* ImageBlobs:: calcsimple() {
 		TBlobs.push_back(b1);
 		
 	}
+	
+	if (TBlobs.size() < 1 && idnumbers != 0) { // reset id count
+		idnumbers = 0;
+	}
+	
 	
 	return &TBlobs;
 	
@@ -512,10 +512,14 @@ vector<TBlob*>* ImageBlobs:: tracksimple() {
 		}
 		b1->cx = ab->cx;
 		b1->cy = ab->cy;
-		b1->velx = lp2 * b1->prevelx + lp1 * (b1->cx - b1->pcx);// vx;//b->cx -
-		// b->pcx;
-		b1->vely = lp2 * b1->prevely + lp1 * (b1->cy - b1->pcy);// vy;//b->cy -
-		// b->pcy;
+
+		b1->velx = lp2 * b1->prevelx + lp1 * (b1->cx - b1->pcx);
+		b1->vely = lp2 * b1->prevely + lp1 * (b1->cy - b1->pcy);		
+		
+//		b1->velx += lp2 * b1->velx + lp1 * (b1->boxcenterx - b1->pboxcenterx) * wr;	
+//		b1->vely += lp2 * b1->vely + lp1 * (b1->boxcentery - b1->pboxcentery) * hr;	
+
+		
 		b1->boxminx = ab->boxminx;
 		b1->boxmaxx = ab->boxmaxx;
 		b1->boxminy = ab->boxminy;
@@ -547,6 +551,13 @@ vector<TBlob*>* ImageBlobs:: tracksimple() {
 		
 	}
 	
+	
+	if (TBlobs.size() < 1 && idnumbers != 0) { // reset id count
+		idnumbers = 0;
+	}
+	
+	
+	
 	return &TBlobs;
 	
 }
@@ -561,6 +572,9 @@ void ImageBlobs:: dotracking() {
 	prevtrackednumblobs = trackednumblobs;
 	trackednumblobs = 0;
 	prevTBlobs.clear();// = new ArrayList<TBlob>();
+	
+	
+	
 	for (int i = 0; i < TBlobs.size(); i++) {
 		TBlob * tb = TBlobs.at(i);
 		// tb.presencetime++;
@@ -575,7 +589,7 @@ void ImageBlobs:: dotracking() {
 		prevTBlobs.at(i)->linked = false;
 	}
 	
-	if (numblobs > 0) {
+	if (theblobs.size() > 0) {
 		compareblobsprevblobs();
 	}
 	// always
@@ -596,7 +610,7 @@ void ImageBlobs:: sortTBlobs() {
 	
 	if (TBlobs.size() > 0) {		
 		for (int i = TBlobs.size() - 1; i >= 0; i--) {
-			int minid2 = (int) 2e63 - 1;
+			int minid2 = (int) 2e16;
 			int who = -1;
 			for (int j = 0; j < TBlobs.size(); j++) {
 				TBlob *tb = (TBlobs.at(i));
@@ -641,7 +655,7 @@ bool ImageBlobs:: matchblobprevTBlobs(ABlob * ab) {
 		
 		float dx = ab->cx - prev->cx;
 		float dy = ab->cy - prev->cy;
-		float d2 = dx * dx + dy * dy;
+		float d2 = ABS(dx)+ABS(dy);//dx * dx + dy * dy;
 		if (d2 < mindist && d2 < mintrackeddist) {
 			mintrackeddist = d2;
 			who = i;
@@ -651,6 +665,7 @@ bool ImageBlobs:: matchblobprevTBlobs(ABlob * ab) {
 	
 	if (matched) {
 		// System.out.print("matched blob "+who+ "\n");
+		cout <<"matched blob "<<who<< "\n";
 		TBlob * b = ( prevTBlobs.at(who));//remove(who);
 		//delete reference, not object
 		prevTBlobs.erase(prevTBlobs.begin()+who);
@@ -711,6 +726,7 @@ void ImageBlobs::compareblobsprevblobs() {
 		bool matched = matchblobprevTBlobs(ab);
 		
 		if (!matched){
+			idnumbers++;
 			TBlob * tb = new TBlob(ab);
 			TBlobs.push_back(tb);
 			trackednumblobs++;
@@ -724,10 +740,10 @@ void ImageBlobs::doremoveprevblobs() {
 	for (int i = prevTBlobs.size() - 1; i >= 0; i--) {
 		
 		TBlob & tb = *(prevTBlobs.at(i));
-		
-		if (tb.linked)
-			cout <<"flob: a linked blob in doremove error." << i <<" \n";
-		else {
+//		
+//		if (tb.linked)
+//			cout <<"flob: a linked blob in doremove error." << i <<" \n";
+//		else {
 			// check life
 			if (tb.lifetime-- < 0){
 				delete prevTBlobs[i];
@@ -745,7 +761,7 @@ void ImageBlobs::doremoveprevblobs() {
 				
 			}
 		}
-	}
+//	}
 	
 }
 
@@ -840,6 +856,9 @@ vector<float> ImageBlobs:: postcollideTBlobs(float x, float y, float rad) {
 
 
 
+
+
+
 vector<float> ImageBlobs:: postcollideblobs(float x, float y, float rad) {
 	
 	vector<float> dcol;// = { 0f, -1f, -1f, 0f, 0f }; // default return
@@ -882,9 +901,8 @@ vector<float> ImageBlobs:: postcollideblobs(float x, float y, float rad) {
 				nvx *= nvl;
 				nvy *= nvl;
 				// moving the circle along this normal by a distance equal
-				// to the circle radius
-				// minus the distance from the closest point to the circle
-				// center
+				// to the circle radius minus the distance from the closest 
+				// point to the circle center
 				float move = rad - d1 + 0.0001f;
 				
 				nvx *= move;
@@ -1048,7 +1066,7 @@ ABlob *	  ImageBlobs::calc_feature_head(ABlob * b){
 
 
 ABlob *	  ImageBlobs::calc_feature_bottom(ABlob * b){
-
+	
 	
 	int ex = b->boxmaxx;
 	int ey = b->boxmaxy;
@@ -1128,6 +1146,9 @@ ABlob *	  ImageBlobs::calc_feature_feet(ABlob * b){
 	
 	int i = 0, j = 0;
 	
+	bool found = false; // new
+	
+	
 	// footleft
 	j = ey;
 	for (i = bx; i < cx; i++) {
@@ -1136,19 +1157,36 @@ ABlob *	  ImageBlobs::calc_feature_feet(ABlob * b){
 			b->footlefty = j * wcoordsx;
 			// System.out.print("found armleft at "+b->armleftx+" "+b->armlefty
 			// );
+			found = true;
 			break;
 			
 		}
 	}
+	
+	if(!found){
+		b->footleftx = b->cx;
+		b->footlefty = b->boxmaxy * wcoordsy;//b->cy;
+	}
+	
+	
+	found = false;	
 	// footright
 	j = ey;
 	for (i = ex - 1; i > cx; i--) {
 		if (testimagemap(i, j)) {
 			b->footrightx = i * wcoordsx;
 			b->footrighty = j * wcoordsy;
+			found = true;
 			break;
 		}
 	}
+	
+	
+	if(!found){
+		b->footrightx = b->cx;
+		b->footrighty = b->boxmaxy * wcoordsy;//b->cy;
+	}
+	
 	
 	return b;
 	
@@ -1252,4 +1290,4 @@ quadBlob * ImageBlobs::calc_quad(quadBlob * b) {
 	}
 	return b;
 }
-
+// eof

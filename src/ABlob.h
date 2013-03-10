@@ -37,8 +37,8 @@
 class ABlob : public baseBlob {
 public:
 	
-	int boxdimx,boxdimy;
-	int pboxcenterx,pboxcentery;
+	unsigned int boxdimx,boxdimy;
+	unsigned int pboxcenterx,pboxcentery;
 	int ivelx, ively;
 	 // normalized to desired output coords vals
 	float cx, cy;

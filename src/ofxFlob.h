@@ -31,7 +31,7 @@
  * 
  * @author      Andre Sier 
  * @modified    20130215
- * @version     0.2.4a (24)
+ * @version     0.2.5b (25)
  * @url			http://s373.net/code/flob
  */
 
@@ -54,13 +54,13 @@ public:
 	ofImage			backgroundPixels;
 //	ofFloatImage
 		
-	int							numPixels;	
-	int							videoresw, videoresh;
-	float						worldwidth, worldheight;
-	int							presence;
-	float						presencef;
-	int							videotexmode, pvideotexmode;
-	bool						videotexchange;
+	unsigned int							numPixels;	
+	unsigned int							videoresw, videoresh;
+	float									worldwidth, worldheight;
+	unsigned int							presence;
+	float									presencef;
+	int										videotexmode, pvideotexmode;
+	bool									videotexchange;
 	
 	int							videothresh, videofade;
 	float						videothreshf, videofadef;
@@ -69,17 +69,16 @@ public:
 	bool						trackfeatures[5];
 	
 	bool floatmode;
-	float floatsmooth;//=0.555f;
+	float floatsmooth;
 	vector<float> backgroundLuma;
 	vector<float> currentLuma;
 	
 	
-	enum { STATIC_DIFFERENCE = 0, CONTINUOUS_DIFFERENCE, CONTINUOUS_EASE_DIFFERENCE }; //om
-	enum { RED = 0, GREEN, BLUE, LUMA601, LUMA709, LUMAUSER } ;//colormode
-	enum { ABSDIF = 0, LESSER, GREATER };//thresholdmode
+	enum { STATIC_DIFFERENCE = 0, CONTINUOUS_DIFFERENCE, CONTINUOUS_EASE_DIFFERENCE } _om; //om
+	enum { RED = 0, GREEN, BLUE, LUMA601, LUMA709, LUMAUSER } _colormode ; //colormode
+	enum { ABSDIF = 0, LESSER, GREATER } _thresholdmode; //thresholdmode
 	
-	int							om;
-	int							colormode, thresholdmode;
+	int							om, colormode, thresholdmode;
 	
 	float						lumausercoefs[3];
 	
@@ -87,6 +86,7 @@ public:
 	
 	static unsigned int	TBlobLifeTime,
 						TBlobMaxDistSquared;
+	
 	int							nearGray, farGray;
 	
 	string						version;
@@ -102,7 +102,7 @@ public:
 	~ofxFlob();
 	ofxFlob ();
 
-	void setup(const int srcW=127,const int srcH=127, const float dstW=ofGetWidth(), const float dstH = ofGetHeight());
+	void setup(const unsigned int srcW=128,const unsigned int srcH=128, const float dstW=ofGetWidth(), const float dstH = ofGetHeight());
 	
 	/// 
 	
@@ -214,25 +214,25 @@ public:
 	}
 	
 	
-	const float getThresh()		{ return videothreshf ; }
-	const float getFade()		{ return videofadef ; }
-	const bool getMirrorX()		{ return mirrorX; }
-	const bool getMirrorY()		{ return mirrorY; }
-	const bool getFloatmode()	{ return floatmode; }
-	const bool getFloatsmooth()	{ return floatsmooth; }
-	const int getOm()			{ return om; }
-	const int getColormode()	{ return colormode; }
-	const int getThresholdmode(){ return thresholdmode; }
-	const float * getLumaUserCoefs() { return lumausercoefs; }
-	const int getMinNumPixels()	{ return imageblobs.ninpix; }
-	const int getMaxNumPixels()	{ return imageblobs.maxpix; }
-	const float getContinuousEase() { return continuous_ease; }
-	const float getTBlobLifeTime() { return TBlobLifeTime; }
-	const float getTBlobMaxDistSquared() { return TBlobMaxDistSquared; }
-	const bool getClampGray()	{ return clampGray; }
-	const bool getTBlobDoSorting()	{ return TBlobDoSorting; }
-	const int getNearGray()	{ return nearGray; }
-	const int getFarGray()	{ return farGray; }
+	const float getThresh()					{ return videothreshf ; }
+	const float getFade()					{ return videofadef ; }
+	const bool getMirrorX()					{ return mirrorX; }
+	const bool getMirrorY()					{ return mirrorY; }
+	const bool getFloatmode()				{ return floatmode; }
+	const bool getFloatsmooth()				{ return floatsmooth; }
+	const int getOm()						{ return om; }
+	const int getColormode()				{ return colormode; }
+	const int getThresholdmode()			{ return thresholdmode; }
+	const float * getLumaUserCoefs()		{ return lumausercoefs; }
+	const unsigned int getMinNumPixels()	{ return imageblobs.ninpix; }
+	const unsigned int getMaxNumPixels()	{ return imageblobs.maxpix; }
+	const float getContinuousEase()			{ return continuous_ease; }
+	const float getTBlobLifeTime()			{ return TBlobLifeTime; }
+	const float getTBlobMaxDistSquared()	{ return TBlobMaxDistSquared; }
+	const bool getClampGray()				{ return clampGray; }
+	const bool getTBlobDoSorting()			{ return TBlobDoSorting; }
+	const int getNearGray()					{ return nearGray; }
+	const int getFarGray()					{ return farGray; }
 
 	
 	

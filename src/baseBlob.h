@@ -43,10 +43,10 @@ public:
 	virtual ~baseBlob(){}; 
 	//polymorphy should include a base virtual destructor
 	
-	int id;
-	int pixelcount;
-	int boxminx, boxminy, boxmaxx, boxmaxy;
-	int boxcenterx, boxcentery;
+	unsigned int id;
+	unsigned int pixelcount;
+	unsigned int boxminx, boxminy, boxmaxx, boxmaxy;
+	unsigned int boxcenterx, boxcentery;
 	
 	
 };

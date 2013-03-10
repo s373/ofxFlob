@@ -21,21 +21,23 @@ class ofxFlob; // fwddecl
 
 class ImageBlobs {
 public:		
-	static unsigned int	idnumbers;
-	int					numblobs, prevnumblobs;
-	int					trackednumblobs, prevtrackednumblobs;
-	int					lifetime;
-	int					ninpix;
-	int					maxpix;
-	vector<bool>		imagemap;
-	bool				imagemaplit;
-	int					w,h;
-	float				wr,hr, w2, h2;
-	float				wcoordsx, wcoordsy;
-	int					worldw, worldh;
-	int					numpix;
-	float				lp1,lp2;
-	float				trackingmindist;
+	
+	static unsigned int				idnumbers;
+	unsigned int					numblobs, prevnumblobs;
+	unsigned int					trackednumblobs, prevtrackednumblobs;
+	unsigned int					lifetime;
+	unsigned int					ninpix;
+	unsigned int					maxpix;
+	vector<bool>					imagemap;
+	bool							imagemaplit;
+	unsigned int					w,h;
+	float							wr,hr, w2, h2;
+	float							wcoordsx, wcoordsy;
+	unsigned int					worldw, worldh;
+	unsigned int					numpix;
+	float							lp1,lp2;
+	float							trackingmindist;
+	
 	
 	vector				<ABlob *>				theblobs;
 	vector				<ABlob *>				prevblobs;
@@ -78,8 +80,7 @@ public:
 	ABlob *	  calc_feature_feet(ABlob * b);
 	quadBlob *	  calc_quad(quadBlob * b);
 	inline bool testimagemap(const int x, const int y) {
-		return imagemap[y * w + x];
-		
+		return imagemap[y * w + x];		
 	}
 	
 };

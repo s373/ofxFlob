@@ -36,7 +36,7 @@ ofxFlob::ofxFlob() {
 	floatmode = true;
 	floatsmooth = 0.555f;
 	bdoclear = true;
-	TBlobDoSorting = false;
+	TBlobDoSorting = true;
 	clampGray = false;
 	nearGray = 0;
 	farGray = 255;
@@ -45,7 +45,7 @@ ofxFlob::ofxFlob() {
 
 
 
-void ofxFlob::setup(const int srcW,const int srcH, const float dstW, const float dstH ){
+void ofxFlob::setup(const unsigned int srcW,const unsigned int srcH, const float dstW, const float dstH ){
 	videoresw = srcW; videoresh = srcH;
 	worldwidth = dstW; worldheight = dstH;
 	
@@ -184,8 +184,8 @@ ofImage & ofxFlob::binarize (unsigned char * pix, int width, int height){
 		int binarize = 0;
 		
 		if(floatmode){
-			if(ABS(currentLuma[i]-currentVal)>1e-5) currentLuma[i] += ((float)currentVal-currentLuma[i])*floatsmooth;
-			if(ABS(backgroundLuma[i]-backgroundVal)>1e-5) backgroundLuma[i] += ((float)backgroundVal-backgroundLuma[i])*floatsmooth;
+			if(ABS(currentLuma[i]-currentVal)>1e-7) currentLuma[i] += ((float)currentVal-currentLuma[i])*floatsmooth;
+			if(ABS(backgroundLuma[i]-backgroundVal)>1e-7) backgroundLuma[i] += ((float)backgroundVal-backgroundLuma[i])*floatsmooth;
 			currentValf = currentLuma[i];
 			backgroundValf = backgroundLuma[i];
 			
@@ -323,7 +323,7 @@ void ofxFlob::easeBackground (ofImage& img){
 	unsigned char * imgpix = img.getPixels();
 		
 	for(int i=0; i<numPixels; i++){
-		if(ABS(bgpix[i]-imgpix[i])>1e-5)
+		if(ABS(bgpix[i]-imgpix[i])>1e-7)
 			bgpix[i] += (unsigned char)(((float)imgpix[i] - (float)bgpix[i] ) * continuous_ease);
 	}
 	backgroundPixels.update();

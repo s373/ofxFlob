@@ -566,7 +566,7 @@ vector<TBlob*>* ImageBlobs:: tracksimple() {
 
 
 
-void ImageBlobs:: dotracking() {
+void ImageBlobs:: dotracking() { // memory management is buggy here, tracksimple is good
 	// / copy current tracked blob to prev tracked blob and increment life
 	
 	prevtrackednumblobs = trackednumblobs;
@@ -655,7 +655,7 @@ bool ImageBlobs:: matchblobprevTBlobs(ABlob * ab) {
 		
 		float dx = ab->cx - prev->cx;
 		float dy = ab->cy - prev->cy;
-		float d2 = ABS(dx)+ABS(dy);//dx * dx + dy * dy;
+		float d2 = dx * dx + dy * dy;// ABS(dx)+ABS(dy);//dx * dx + dy * dy;
 		if (d2 < mindist && d2 < mintrackeddist) {
 			mintrackeddist = d2;
 			who = i;
@@ -665,7 +665,7 @@ bool ImageBlobs:: matchblobprevTBlobs(ABlob * ab) {
 	
 	if (matched) {
 		// System.out.print("matched blob "+who+ "\n");
-		cout <<"matched blob "<<who<< "\n";
+//		cout <<"matched blob "<<who<< "\n";
 		TBlob * b = ( prevTBlobs.at(who));//remove(who);
 		//delete reference, not object
 		prevTBlobs.erase(prevTBlobs.begin()+who);

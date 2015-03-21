@@ -54,8 +54,8 @@ public:
 			footleftx,footlefty,
 			footrightx,footrighty;
 	
-	ABlob() { 
-		baseBlob::baseBlob();
+	ABlob() { 		
+		baseBlob();	
 		boxdimx=0,boxdimy=0,pboxcenterx=-1,pboxcentery=-1,ivelx=0,ively=0,cx=0,cy=0,bx=0,by=0,
 		dimx=0,dimy=0,armleftx=0,armlefty=0,armrightx=0,armrighty=0,
 		headx=0,heady=0,bottomx=0,bottomy=0,footleftx=0,footlefty, footrightx=0,footrighty=0 ;

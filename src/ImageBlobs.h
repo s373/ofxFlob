@@ -56,8 +56,8 @@ public:
 	void clear();
 	
 	void calcdims(const int w, const int h, const float ww, const float wh);
-	void calc(ofImage & image);
-	void calcQuad(ofImage & image);
+	void calc( ofImage & image);
+	void calcQuad( ofImage & image);
 	void copy_blobs_to_previousblobs();
 
 	vector<TBlob*>* calcsimple();

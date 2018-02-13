@@ -106,12 +106,15 @@ public:
 	
 	/// 
 	
+	ofImage & kinectpass (unsigned char * pix, int width, int height, int tmin, int tmax);
 	ofImage & binarize (unsigned char * pix, int width, int height);
+	ofImage & binarizeGray (unsigned char * pix, int width, int height);
+	ofImage & binarizeThreshGray (unsigned char * pix, int width, int height, int tmin, int tmax);
 	
-	vector<ABlob*>*	calc( ofImage & bin ); 
-	vector<TBlob*>*	calcsimple( ofImage & bin ); 
-	vector<TBlob*>*	track( ofImage & bin ); 
-	vector<TBlob*>*	tracksimple( ofImage & bin ); 
+	vector<ABlob*>*	calc(  ofImage & bin );
+	vector<TBlob*>*	calcsimple(  ofImage & bin );
+	vector<TBlob*>*	track(  ofImage & bin );
+	vector<TBlob*>*	tracksimple(  ofImage & bin ); 
 	
 	float getPresencef(){
 		return presencef;
@@ -124,6 +127,7 @@ public:
 	}
 	
 	
+	void zeroBackground ();
 	void setBackground (ofImage& imggray);
 	void easeBackground (ofImage& imggray);
 	void clearBackground(){

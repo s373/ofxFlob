@@ -16,8 +16,9 @@
 
 TBlob::TBlob (const ABlob * b) {
 	
-	TBlob::TBlob();	
-	
+	//TBlob::TBlob();	
+	TBlob();	
+
 //	id = ImageBlobs::idnumbers++;
 	id = ImageBlobs::idnumbers;
 	pixelcount = b->pixelcount;	

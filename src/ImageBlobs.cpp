@@ -94,7 +94,7 @@ void ImageBlobs::calcdims(const int w, const int h, const float ww, const float 
 
 
 
-void ImageBlobs::calc(ofImage & image) {
+void ImageBlobs::calc( ofImage & image) {
 	int min0 = 1000000;
 	int max0 = -100000;
 	
@@ -107,7 +107,7 @@ void ImageBlobs::calc(ofImage & image) {
 	thecoords.clear();
 	imagemap.assign( numpix, false );
 	
-	unsigned char *pix = image.getPixels();
+	 unsigned char *pix = image.getPixels();
 	
 	int imgW = image.getWidth();
 	int imgH = image.getHeight();
@@ -217,7 +217,7 @@ void ImageBlobs::calc(ofImage & image) {
 
 
 
-void ImageBlobs::calcQuad(ofImage & image) {
+void ImageBlobs::calcQuad( ofImage & image) {
 	int min0 = 1000000;
 	int max0 = -100000;
 	

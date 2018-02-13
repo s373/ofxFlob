@@ -56,7 +56,7 @@ public:
 	
 	~TBlob(){}
 	TBlob(){
-		ABlob::ABlob();
+		ABlob();
 		newblob=linked=false;
 		birthtime=lifetime=presencetime=pcx=pcy=velx=vely=prevelx=prevely=rad=rad2=0;
 		maxdist2=2555.f;
